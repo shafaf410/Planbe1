@@ -4,7 +4,7 @@ import Projects from "@/components/Projects";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-[#F7F5F2] text-[#111111] overflow-x-hidden">
+    <main className="flex min-h-screen flex-col bg-[#F7F5F2] text-[#111111]">
       <Navigation />
       <Hero />
       <Projects />
