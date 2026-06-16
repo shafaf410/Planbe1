@@ -25,7 +25,7 @@ export default function Hero() {
         className="absolute inset-0 z-0 origin-right"
       >
         <div 
-          className="absolute inset-0 bg-[#E8E6E1] [clip-path:polygon(0_55%,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(50%_0,100%_0,100%_100%,35%_100%)]"
+          className="absolute inset-0 bg-transparent [clip-path:polygon(0_55%,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(50%_0,100%_0,100%_100%,35%_100%)]"
         >
           <video
             autoPlay
