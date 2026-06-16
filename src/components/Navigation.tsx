@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -73,7 +73,8 @@ export default function Navigation() {
   const logoScale = useTransform(scrollY, [0, 100], [1, 0.9]);
 
   return (
-    <motion.header
+    <>
+      <motion.header
       style={{ top: navTop }}
       className="fixed left-1/2 -translate-x-1/2 z-[999] w-[calc(100%-3rem)] max-w-[1200px] flex items-center justify-between pointer-events-none"
     >
@@ -194,5 +195,57 @@ export default function Navigation() {
         </motion.div>
       </Link>
     </motion.header>
+
+      {/* Mobile Menu Full Screen Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[998] flex flex-col items-center justify-center bg-[#F7F5F2]/95 backdrop-blur-md md:hidden pointer-events-auto"
+          >
+            <nav className="flex flex-col items-center space-y-8">
+              {navLinks.map((link, index) => {
+                const isActive = pathname === link.href;
+                return (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`font-serif text-4xl uppercase tracking-widest transition-colors duration-300 ${
+                        isActive ? "text-[#111111]" : "text-[#111111]/40"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navLinks.length * 0.1 + 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="pt-8"
+              >
+                <Link
+                  href="/contact"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-[#111111] text-[#F7F5F2] font-sans text-xs px-8 py-4 tracking-[0.2em] uppercase rounded-full shadow-lg"
+                >
+                  CONTACT US
+                </Link>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

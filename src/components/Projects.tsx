@@ -117,11 +117,11 @@ export default function Projects() {
         Completely isolated from the scrolling gallery to guarantee absolutely no overlap.
         Generous spacing (py-32 or greater) ensures it breathes. 
       */}
-      <section className="pt-32 pb-24 flex flex-col justify-center items-center relative z-10 w-full bg-[#F7F5F2]">
-        <h1 className="font-serif text-6xl md:text-[8rem] leading-none tracking-tight text-[#111111] uppercase font-light">
+      <section className="pt-24 md:pt-32 pb-16 md:pb-24 flex flex-col justify-center items-center relative z-10 w-full bg-[#F7F5F2] px-4">
+        <h1 className="font-serif text-5xl md:text-[8rem] leading-none tracking-tight text-[#111111] uppercase font-light">
           PROJECTS
         </h1>
-        <p className="font-sans text-sm md:text-base text-[#6A6A6A] mt-8 max-w-xl text-center leading-relaxed px-6">
+        <p className="font-sans text-xs md:text-base text-[#6A6A6A] mt-6 md:mt-8 max-w-xl text-center leading-relaxed px-6">
           A collection of spaces thoughtfully designed from concept to reality.
         </p>
       </section>
@@ -165,16 +165,16 @@ export default function Projects() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
                 
                 {/* Editorial Information Overlay (Bottom Left) */}
-                <div className="absolute bottom-0 left-0 p-8 md:p-12 text-[#F7F5F2] w-full flex flex-col items-start transform transition-transform duration-700">
-                  <h2 className="font-serif text-3xl md:text-5xl mb-4 tracking-tight">{project.name}</h2>
+                <div className="absolute bottom-0 left-0 p-6 md:p-12 text-[#F7F5F2] w-full flex flex-col items-start transform transition-transform duration-700">
+                  <h2 className="font-serif text-2xl md:text-5xl mb-2 md:mb-4 tracking-tight">{project.name}</h2>
                   
-                  <div className="flex flex-col gap-1 mb-8 font-sans text-[11px] md:text-xs uppercase tracking-[0.2em] text-[#D9D4CC]/90">
+                  <div className="flex flex-col gap-1 mb-6 md:mb-8 font-sans text-[10px] md:text-xs uppercase tracking-[0.2em] text-[#D9D4CC]/90">
                     <span>{project.type}</span>
                     <span>{project.location}</span>
                     <span>{project.year}</span>
                   </div>
                   
-                  <div className="flex items-center gap-3 font-sans text-xs uppercase tracking-widest border-b border-transparent group-hover:border-[#F7F5F2] pb-1 transition-all duration-500">
+                  <div className="flex items-center gap-3 font-sans text-[10px] md:text-xs uppercase tracking-widest border-b border-transparent group-hover:border-[#F7F5F2] pb-1 transition-all duration-500">
                     View Project <ArrowRight size={14} className="transform transition-transform duration-500 group-hover:translate-x-2" />
                   </div>
                 </div>
