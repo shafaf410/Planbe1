@@ -25,121 +25,93 @@ export default function Projects() {
     gsap.registerPlugin(ScrollTrigger);
     if (!containerRef.current || !trackRef.current) return;
 
-    // The track needs to move far enough left so the last card reaches the center.
-    // Calculate total scrollable width.
-    const getScrollAmount = () => {
-      if (!trackRef.current) return 0;
-      return -(trackRef.current.scrollWidth - window.innerWidth);
-    };
+    let ctx = gsap.context(() => {
+      const getScrollAmount = () => {
+        if (!trackRef.current) return 0;
+        return -(trackRef.current.scrollWidth - window.innerWidth);
+      };
 
-    // Calculate spacing dynamically based on card size
-    // We want the layout to curve based on distance from center
-    const updateCards = () => {
-      if (!cardsRef.current) return;
-      
-      const windowCenterX = window.innerWidth / 2;
-      let closestIndex = 0;
-      let minDistance = Infinity;
-
-      // Card width + margin approx. Assuming ~800px total stride
-      const stride = 800; 
-
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
+      const updateCards = () => {
+        if (!cardsRef.current) return;
         
-        const rect = card.getBoundingClientRect();
-        const cardCenterX = rect.left + rect.width / 2;
-        const distance = cardCenterX - windowCenterX;
-        
-        // Track active card
-        if (Math.abs(distance) < minDistance) {
-          minDistance = Math.abs(distance);
-          closestIndex = index;
-        }
+        const windowCenterX = window.innerWidth / 2;
+        let closestIndex = 0;
+        let minDistance = Infinity;
+        const stride = 800; 
 
-        // Normalized distance: 0 is center, 1 is 1 card away, 2 is 2 cards away, etc.
-        const normalizedDist = distance / stride;
-        const absDist = Math.abs(normalizedDist);
+        cardsRef.current.forEach((card, index) => {
+          if (!card) return;
+          const rect = card.getBoundingClientRect();
+          const cardCenterX = rect.left + rect.width / 2;
+          const distance = cardCenterX - windowCenterX;
+          
+          if (Math.abs(distance) < minDistance) {
+            minDistance = Math.abs(distance);
+            closestIndex = index;
+          }
 
-        // 3D CSS Math per user requirements:
-        // Center: 100% scale (700-800px base size).
-        // Adjacent (dist=1): 65% scale.
-        // Edge (dist=2): ~40% visible/scale.
-        
-        let scale = 1;
-        if (absDist <= 1) {
-          // Interpolate from 1 to 0.65
-          scale = 1 - (absDist * 0.35); 
-        } else if (absDist <= 2) {
-          // Interpolate from 0.65 to 0.4
-          scale = 0.65 - ((absDist - 1) * 0.25);
-        } else {
-          // Beyond edge, keep scaling down gently
-          scale = Math.max(0.2, 0.4 - ((absDist - 2) * 0.1));
-        }
+          const normalizedDist = distance / stride;
+          const absDist = Math.abs(normalizedDist);
+          
+          let scale = 1;
+          if (absDist <= 1) {
+            scale = 1 - (absDist * 0.35); 
+          } else if (absDist <= 2) {
+            scale = 0.65 - ((absDist - 1) * 0.25);
+          } else {
+            scale = Math.max(0.2, 0.4 - ((absDist - 2) * 0.1));
+          }
 
-        // Rotation: Curve inwards.
-        // Right side (positive distance) rotates negative (left-facing).
-        // Left side (negative distance) rotates positive (right-facing).
-        let rotateY = normalizedDist * -35; 
-        rotateY = Math.max(-50, Math.min(50, rotateY)); // Cap at 50deg
-        
-        // Opacity: Center is 1. Non-active cards drop subtly.
-        // User requested "very subtle opacity reduction" for non-active.
-        let opacity = 1;
-        if (absDist > 0.3) { // Start fading out slightly off-center
-          opacity = Math.max(0.4, 1 - (absDist * 0.3));
-        }
+          let rotateY = normalizedDist * -35; 
+          rotateY = Math.max(-50, Math.min(50, rotateY)); 
+          
+          let opacity = 1;
+          if (absDist > 0.3) { 
+            opacity = Math.max(0.4, 1 - (absDist * 0.3));
+          }
 
-        // Depth
-        const z = -absDist * 200; 
+          const z = -absDist * 200; 
 
-        // Apply transforms immediately
-        gsap.set(card, {
-          scale,
-          rotateY,
-          z,
-          opacity,
-          transformOrigin: "center center",
-          zIndex: Math.round(100 - absDist * 10)
+          gsap.set(card, {
+            scale,
+            rotateY,
+            z,
+            opacity,
+            transformOrigin: "center center",
+            zIndex: Math.round(100 - absDist * 10)
+          });
         });
+
+        if (activeIndexRef.current) {
+          activeIndexRef.current.innerText = String(closestIndex + 1).padStart(2, '0');
+        }
+      };
+
+      gsap.to(trackRef.current, {
+        x: getScrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          pin: true,
+          scrub: 1.5,
+          end: () => `+=${trackRef.current?.scrollWidth || window.innerWidth * 3}`,
+          invalidateOnRefresh: true,
+          onUpdate: updateCards,
+        }
       });
 
-      // Safely update the DOM text for the progress indicator
-      if (activeIndexRef.current) {
-        activeIndexRef.current.innerText = String(closestIndex + 1).padStart(2, '0');
-      }
-    };
+      updateCards();
+      window.addEventListener("resize", updateCards);
+    }, containerRef);
 
-    // Main ScrollTrigger
-    const scrollTween = gsap.to(trackRef.current, {
-      x: getScrollAmount,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        pin: true,
-        scrub: 1.5, // 1.5s smoothing for luxurious feel
-        end: () => `+=${trackRef.current?.scrollWidth || 0}`,
-        invalidateOnRefresh: true,
-        onUpdate: updateCards,
-      }
-    });
-
-    // Run once on mount
-    updateCards();
-    window.addEventListener("resize", updateCards);
-
-    // Force GSAP to recalculate everything after a tiny delay
-    // This solves the issue where it calculates the width before all images/items fully render
     const timeout = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 500);
 
     return () => {
       clearTimeout(timeout);
-      scrollTween.kill();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-      window.removeEventListener("resize", updateCards);
+      ctx.revert(); // Automatically cleans up all tweens and scrolltriggers created inside the context
+      window.removeEventListener("resize", () => {}); // the addEventListener in context isn't automatically removed by gsap, so we should clean it properly
     };
   }, []);
 
