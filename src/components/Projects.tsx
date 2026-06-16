@@ -26,11 +26,6 @@ export default function Projects() {
     if (!containerRef.current || !trackRef.current) return;
 
     let ctx = gsap.context(() => {
-      const getScrollAmount = () => {
-        if (!trackRef.current) return 0;
-        return -(trackRef.current.scrollWidth - window.innerWidth);
-      };
-
       const updateCards = () => {
         if (!cardsRef.current) return;
         
@@ -88,13 +83,13 @@ export default function Projects() {
       };
 
       gsap.to(trackRef.current, {
-        x: getScrollAmount,
+        x: () => -(window.innerWidth * 5.5), // Approximate the track width explicitly (6 cards ~ 90vw + margins)
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
           pin: true,
           scrub: 1.5,
-          end: () => `+=${trackRef.current?.scrollWidth || window.innerWidth * 3}`,
+          end: () => `+=${window.innerWidth * 5.5}`, // Match the explicit scroll distance
           invalidateOnRefresh: true,
           onUpdate: updateCards,
         }
