@@ -28,7 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F7F5F2] text-[#111111]">
+      <body className="min-h-full bg-[#F7F5F2] text-[#111111]">
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>
