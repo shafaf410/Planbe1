@@ -34,7 +34,7 @@ export default function Hero() {
             playsInline
             disablePictureInPicture
             preload="auto"
-            className="w-full h-full object-cover opacity-95 object-right scale-[1.2] translate-x-[15%]"
+            className="w-full h-full object-cover opacity-95 object-center scale-[1.2]"
           >
             <source src="/video_2026-06-15_22-34-28.mp4" type="video/mp4" />
           </video>
