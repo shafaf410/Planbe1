@@ -19,13 +19,13 @@ export default function Hero() {
       ref={containerRef} 
       className="relative w-full h-screen overflow-hidden bg-[#F7F5F2]"
     >
-      {/* Right Video Area with Diagonal Cut */}
+      {/* Left Video Area with Diagonal Cut */}
       <motion.div 
         style={{ y, opacity }}
-        className="absolute inset-0 z-0 origin-right"
+        className="absolute inset-0 z-0 origin-left"
       >
         <div 
-          className="absolute inset-0 bg-[#E8E6E1] [clip-path:polygon(0_55%,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(65%_0,100%_0,100%_100%,50%_100%)]"
+          className="absolute inset-0 bg-[#E8E6E1] [clip-path:polygon(0_0,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(0_0,60%_0,45%_100%,0_100%)]"
         >
           <video
             autoPlay
@@ -43,40 +43,40 @@ export default function Hero() {
           <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.04] mix-blend-screen pointer-events-none" />
           
           {/* Technical Annotations Overlay */}
-          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 [clip-path:polygon(0_55%,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(65%_0,100%_0,100%_100%,50%_100%)]">
-            <div className="absolute top-12 right-12 font-mono text-[10px] text-white/40 tracking-widest">
+          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 [clip-path:polygon(0_0,100%_40%,100%_100%,0_100%)] md:[clip-path:polygon(0_0,60%_0,45%_100%,0_100%)]">
+            <div className="absolute top-12 left-12 font-mono text-[10px] text-white/40 tracking-widest">
               SEC. A-A&apos;
             </div>
-            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-white/40 tracking-widest flex items-center gap-2">
+            <div className="absolute bottom-12 left-12 font-mono text-[10px] text-white/40 tracking-widest flex items-center gap-2">
               <ArrowDownRight size={12} />
               ELEVATION 01
             </div>
-            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-white/20" />
-            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-white/40 tracking-widest -rotate-90">
+            <div className="absolute top-1/2 left-4 w-[1px] h-32 bg-white/20" />
+            <div className="absolute top-1/2 left-4 w-4 h-[1px] bg-white/20" />
+            <div className="absolute top-1/2 left-4 translate-y-32 w-4 h-[1px] bg-white/20" />
+            <div className="absolute top-1/2 left-10 translate-y-16 font-mono text-[10px] text-white/40 tracking-widest -rotate-90">
               3400MM
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Left Content Area */}
-      <div className="absolute inset-0 w-full md:w-[85%] lg:w-[90%] z-10 flex flex-col justify-start items-start text-left pl-6 md:pl-12 lg:pl-16 pr-6 md:pr-8 pt-[15vh] md:pt-[25vh] pointer-events-none">
+      {/* Right Content Area */}
+      <div className="absolute inset-0 w-full z-10 flex flex-col justify-start items-end text-right pr-6 md:pr-12 lg:pr-16 pl-6 md:pl-8 pt-[15vh] md:pt-[25vh] pointer-events-none">
         
-        <div className="pointer-events-auto w-full max-w-xl lg:max-w-3xl relative flex flex-col items-start">
-          <motion.div>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-[5.5rem] leading-[1.05] mb-6 text-[#111111] tracking-tight font-light">
+        <div className="pointer-events-auto w-full max-w-xl lg:max-w-2xl relative flex flex-col items-end">
+          <motion.div className="flex flex-col items-end">
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-[4.5rem] leading-[1.05] mb-6 text-[#111111] tracking-tight font-light text-right">
               Designing<br />
               Spaces Beyond<br />
               Blueprints
             </h1>
             
-            <p className="font-sans text-[#6A6A6A] leading-relaxed mb-8 max-w-sm text-sm">
+            <p className="font-sans text-[#6A6A6A] leading-relaxed mb-8 max-w-sm text-sm text-right">
               Contemporary architecture, interiors, and bespoke living experiences crafted with precision and purpose.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-start justify-start gap-4 w-full max-w-[280px] sm:max-w-none">
+            <div className="flex flex-col sm:flex-row items-end justify-end gap-4 w-full max-w-[280px] sm:max-w-none">
               <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs px-6 py-3.5 flex items-center justify-between sm:justify-start gap-3 hover:bg-black transition-colors duration-300 w-full sm:w-auto">
                 View Projects <ArrowDownRight size={14} className="-rotate-90" />
               </button>
@@ -87,8 +87,8 @@ export default function Hero() {
           </motion.div>
         </div>
         
-        {/* Bottom Left Blueprint Overlay */}
-        <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 opacity-20 w-64 h-64 pointer-events-none mix-blend-multiply">
+        {/* Bottom Right Blueprint Overlay */}
+        <div className="absolute bottom-8 right-16 md:right-24 lg:right-40 opacity-20 w-64 h-64 pointer-events-none mix-blend-multiply">
            <img src="/blueprint-grid.svg" alt="" className="w-full h-full object-cover" />
         </div>
         

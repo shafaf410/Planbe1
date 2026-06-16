@@ -75,13 +75,13 @@ export default function Navigation() {
   return (
     <>
       <motion.header
-      style={{ top: navTop }}
-      className="fixed left-1/2 -translate-x-1/2 z-[999] w-[calc(100%-3rem)] max-w-[1200px] flex items-center justify-between pointer-events-none"
-    >
-      <motion.div
-        style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: useTransform(blurValue, v => `blur(${v}px)`) }}
-        className="relative flex items-center px-6 rounded-full border border-white/40 bg-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
+        style={{ top: navTop }}
+        className="fixed left-0 right-0 z-[999] w-full px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-20"
       >
+        <motion.div
+          style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: useTransform(blurValue, v => `blur(${v}px)`) }}
+          className="absolute left-1/2 -translate-x-1/2 flex items-center px-6 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
+        >
         {/* Subtle Blueprint Grid Texture */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -162,7 +162,7 @@ export default function Navigation() {
       </motion.div>
 
       {/* Right: Architectural Logo (Free floating outside the pill) */}
-      <Link href="/" className="relative z-10 flex items-center group cursor-pointer pointer-events-auto">
+      <Link href="/" className="absolute right-6 md:right-12 z-10 flex items-center group cursor-pointer pointer-events-auto">
         <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center">
           <svg 
             viewBox="0 0 400 300" 
