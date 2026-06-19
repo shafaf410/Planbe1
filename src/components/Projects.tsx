@@ -3,7 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import CircularGallery from "./CircularGallery";
+import CircularGalleryComponent from "./CircularGallery";
+const CircularGallery = CircularGalleryComponent as any;
 
 const projects = [
   { id: 11, name: "DESERT OASIS", type: "Architecture", location: "Jodhpur, India", year: "2026", image: "/projects/img1.png" },
