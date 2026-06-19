@@ -36,7 +36,7 @@ export default function Hero() {
             preload="auto"
             className="w-full h-full object-cover opacity-95 object-center scale-[1.2]"
           >
-            <source src="/video_2026-06-15_22-34-28.mp4" type="video/mp4" />
+            <source src="/projects/TensorPix%20-%20video_2026-06-15_22-34-28.mp4" type="video/mp4" />
           </video>
           
           {/* Blueprint Overlay Effect */}
