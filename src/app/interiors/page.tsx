@@ -43,7 +43,7 @@ export default function InteriorsPage() {
         <div className="relative h-[80vh] w-full overflow-hidden">
           <motion.img 
             style={{ y: y1 }}
-            src="/photo_2026-06-15_22-34-14.jpg" 
+            src="/projects/interior_tactile.png" 
             alt="Material detail"
             className="absolute -top-[20%] w-full h-[140%] object-cover object-center scale-110 sepia-[0.3] brightness-75"
           />
@@ -57,7 +57,7 @@ export default function InteriorsPage() {
         <div className="relative h-[100vh] w-full md:-mt-48 overflow-hidden">
           <motion.img 
             style={{ y: y2 }}
-            src="/photo_2026-06-15_22-34-14.jpg" 
+            src="/projects/interior_light.png" 
             alt="Interior atmosphere"
             className="absolute top-0 w-full h-[120%] object-cover object-center scale-[1.15] brightness-50 contrast-125"
           />
@@ -87,7 +87,7 @@ export default function InteriorsPage() {
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div 
             style={{ scale: useTransform(scrollYProgress, [0, 1], [1, 1.2]) }}
-            className="w-full h-full bg-[url('/photo_2026-06-15_22-34-14.jpg')] bg-cover bg-center opacity-10"
+            className="w-full h-full bg-[url('/projects/interior_light.png')] bg-cover bg-center opacity-10"
           />
         </div>
       </section>

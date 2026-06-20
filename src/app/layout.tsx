@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/SmoothScrolling";
+import TopographicBackground from "@/components/TopographicBackground";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,7 +29,8 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#F7F5F2] text-[#111111]">
+      <body className="min-h-full bg-[#FAFAFA] text-[#111111]">
+        <TopographicBackground />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>

@@ -11,6 +11,11 @@ interface SmoothScrollingProps {
 
 export default function SmoothScrolling({ children }: SmoothScrollingProps) {
   useEffect(() => {
+    // Disable smooth scrolling on mobile for native performance
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      return;
+    }
+
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
@@ -19,7 +24,6 @@ export default function SmoothScrolling({ children }: SmoothScrollingProps) {
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 2,
     });
 
     lenis.on('scroll', ScrollTrigger.update);

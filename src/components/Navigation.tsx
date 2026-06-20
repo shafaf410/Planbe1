@@ -3,13 +3,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navLinks = [
-  { label: 'HOME', href: '/' },
+  { label: 'HOME', href: '/home' },
   { label: 'ABOUT', href: '/about' },
   { label: 'SERVICES', href: '/services' },
   { label: 'PROJECTS', href: '/projects' },
+  { label: 'PROCESS', href: '/process' },
 ];
 
 function MagneticButton({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
@@ -76,11 +78,45 @@ export default function Navigation() {
     <>
       <motion.header
         style={{ top: navTop }}
-        className="fixed left-0 right-0 z-[999] w-full px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-20"
+        className="fixed left-0 right-0 z-[999] w-full px-4 sm:px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-20"
       >
+        {/* Left: New Architectural Logo */}
+        <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 z-10 flex items-center group cursor-pointer pointer-events-auto">
+          <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center min-w-[44px] min-h-[44px]">
+            <Image 
+              src="/logo1.png" 
+              alt="PLAN Bë Logo" 
+              width={100} 
+              height={100} 
+              className="w-14 md:w-20 h-auto object-contain transition-transform duration-500 group-hover:scale-105" 
+            />
+          </motion.div>
+        </Link>
+
+        {/* Right: Menu Button (Mobile Only) */}
+        <MagneticButton 
+          onClick={() => setIsOpen(!isOpen)}
+          className="absolute right-4 sm:right-6 z-10 flex items-center justify-center w-12 h-12 min-w-[44px] min-h-[44px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
+        >
+          <div className="relative w-5 h-3.5 flex flex-col justify-between">
+            <motion.span 
+              animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 6 : 0 }}
+              className="w-full h-[1px] bg-[#111111] origin-center"
+            />
+            <motion.span 
+              animate={{ opacity: isOpen ? 0 : 1 }}
+              className="w-full h-[1px] bg-[#111111]"
+            />
+            <motion.span 
+              animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -6 : 0 }}
+              className="w-full h-[1px] bg-[#111111] origin-center"
+            />
+          </div>
+        </MagneticButton>
+
         <motion.div
           style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: useTransform(blurValue, v => `blur(${v}px)`) }}
-          className="absolute left-1/2 -translate-x-1/2 flex items-center px-6 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
+          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center px-6 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
         >
         {/* Subtle Blueprint Grid Texture */}
         <div 
@@ -90,28 +126,6 @@ export default function Navigation() {
             backgroundSize: '12px 12px'
           }}
         />
-
-        {/* Left (previously Right): Menu Button */}
-        <MagneticButton 
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/50 border border-white/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] md:hidden hover:bg-white/70 transition-colors duration-300"
-        >
-          <div className="relative w-4 h-3 flex flex-col justify-between">
-            <motion.span 
-              animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 5 : 0 }}
-              className="w-full h-[1px] bg-[#111111] origin-center"
-            />
-            <motion.span 
-              animate={{ opacity: isOpen ? 0 : 1 }}
-              className="w-full h-[1px] bg-[#111111]"
-            />
-            <motion.span 
-              animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -5 : 0 }}
-              className="w-full h-[1px] bg-[#111111] origin-center"
-            />
-          </div>
-        </MagneticButton>
-
         {/* Center: Navigation Links */}
         <nav className="hidden md:flex items-center space-x-1 relative z-10 ml-4 md:ml-0">
           {navLinks.map((link) => {
@@ -161,39 +175,6 @@ export default function Navigation() {
         </nav>
       </motion.div>
 
-      {/* Right: Architectural Logo (Free floating outside the pill) */}
-      <Link href="/" className="absolute right-6 md:right-12 z-10 flex items-center group cursor-pointer pointer-events-auto">
-        <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center">
-          <svg 
-            viewBox="0 0 400 300" 
-            className="w-28 md:w-36 h-auto text-[#111111] transition-transform duration-500 group-hover:scale-105"
-            aria-label="PLAN Bë Logo"
-          >
-            {/* The broken frame */}
-            <path 
-              d="M 350 235 L 350 250 L 50 250 L 50 50 L 350 50 L 350 150" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="12" 
-              strokeLinejoin="miter"
-              strokeLinecap="square"
-            />
-            {/* The Logo Text perfectly bounded */}
-            <text 
-              x="75" 
-              y="220" 
-              style={{ fontFamily: 'var(--font-inter), sans-serif' }}
-              fontSize="60" 
-              fontWeight="500" 
-              textLength="265"
-              lengthAdjust="spacing"
-              fill="currentColor"
-            >
-              PLAN Bë
-            </text>
-          </svg>
-        </motion.div>
-      </Link>
     </motion.header>
 
       {/* Mobile Menu Full Screen Overlay */}

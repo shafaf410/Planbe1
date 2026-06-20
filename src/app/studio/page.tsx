@@ -91,7 +91,7 @@ export default function StudioPage() {
             >
               <motion.img 
                 style={{ y }}
-                src="/photo_2026-06-15_22-34-14.jpg" 
+                src="/projects/ai_copy.png" 
                 alt="Studio process" 
                 className="w-full h-[120%] object-cover object-center absolute -top-[10%]"
               />
