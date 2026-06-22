@@ -3,6 +3,7 @@
 import Navigation from "@/components/Navigation";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
 export default function StudioPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -89,12 +90,15 @@ export default function StudioPage() {
               className="absolute w-full h-full overflow-hidden"
               style={{ clipPath: "polygon(20% 0, 100% 0, 80% 100%, 0 100%)" }}
             >
-              <motion.img 
-                style={{ y }}
-                src="/projects/ai_copy.png" 
-                alt="Studio process" 
-                className="w-full h-[120%] object-cover object-center absolute -top-[10%]"
-              />
+              <motion.div style={{ y }} className="w-full h-[120%] absolute -top-[10%]">
+                <Image 
+                  src="/projects/ai_copy.png" 
+                  alt="Studio process" 
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </motion.div>
             </motion.div>
             
             {/* Outline box to emphasize the mask */}

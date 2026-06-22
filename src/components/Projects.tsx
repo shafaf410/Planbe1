@@ -4,6 +4,7 @@ import React, { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import CircularGalleryComponent from "./CircularGallery";
 
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -25,7 +26,8 @@ export default function Projects() {
   const galleryRef = useRef<any>(null);
 
   const galleryItems = projects.map(p => ({
-    image: p.image,
+    // Use Next.js image optimization endpoint to compress massive images before WebGL loads them
+    image: `/_next/image?url=${encodeURIComponent(p.image)}&w=1080&q=75`,
     text: p.name
   }));
 
@@ -92,10 +94,12 @@ export default function Projects() {
             className="flex flex-col group cursor-pointer"
           >
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-[#EAE8E4] mb-4">
-              <img 
+              <Image 
                 src={project.image} 
                 alt={project.name} 
-                className="w-full h-full object-cover grayscale-[10%] group-hover:scale-105 transition-transform duration-700 ease-out"
+                fill
+                className="object-cover grayscale-[10%] group-hover:scale-105 transition-transform duration-700 ease-out"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div className="flex flex-col items-start gap-1">

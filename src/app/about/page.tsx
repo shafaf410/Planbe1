@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
 import Link from "next/link";
 import { StaggerText } from "@/components/ui/stagger-text";
+import Image from "next/image";
 
 export default function About() {
   const fadeUp = {
@@ -18,10 +19,13 @@ export default function About() {
       {/* 1. Hero Section (AECOM Style: Full width, striking image, large title) */}
       <section className="relative w-full h-[70vh] md:h-[85vh] flex items-end pb-12 md:pb-24 px-4 sm:px-6 md:px-12">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/projects/long_view.png" 
             alt="About PlanBē"
-            className="w-full h-full object-cover brightness-[0.85]"
+            fill
+            className="object-cover brightness-[0.85]"
+            priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         </div>
@@ -46,10 +50,12 @@ export default function About() {
             initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
             className="w-full aspect-square md:aspect-[4/5] bg-[#EAE8E4] relative overflow-hidden sticky top-24"
           >
-            <img 
+            <Image 
               src="/projects/akhil.png" 
               alt="Our Approach" 
-              className="w-full h-full object-cover transition-all duration-700"
+              fill
+              className="object-cover transition-all duration-700"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </motion.div>
 

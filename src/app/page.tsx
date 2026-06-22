@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
@@ -16,12 +17,15 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center relative w-32 md:w-48 lg:w-56 h-32 md:h-48 lg:h-56"
         >
-          <img 
+          <Image 
             src="/logo1.png" 
             alt="PLAN Bë Logo" 
-            className="w-32 md:w-48 lg:w-56 h-auto object-contain" 
+            fill
+            className="object-contain" 
+            priority
+            sizes="(max-width: 768px) 128px, (max-width: 1024px) 192px, 224px"
           />
         </motion.div>
 

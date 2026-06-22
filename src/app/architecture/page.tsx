@@ -3,6 +3,7 @@
 import Navigation from "@/components/Navigation";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 export default function ArchitecturePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,12 +60,16 @@ export default function ArchitecturePage() {
           transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-[60vh] md:h-[80vh] overflow-hidden relative rounded-sm shadow-2xl"
         >
-          <motion.img 
-            style={{ y: heroImageY }}
-            src="/projects/amal.png" 
-            alt="Architectural Render" 
-            className="absolute -top-[10%] w-full h-[120%] object-cover"
-          />
+          <motion.div style={{ y: heroImageY }} className="absolute -top-[10%] w-full h-[120%]">
+            <Image 
+              src="/projects/amal.png" 
+              alt="Architectural Render" 
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+          </motion.div>
         </motion.div>
       </section>
 
@@ -108,12 +113,15 @@ export default function ArchitecturePage() {
           </motion.div>
           {/* Image */}
           <div className="relative h-[60vh] lg:h-[80vh] w-full overflow-hidden rounded-sm shadow-xl">
-            <motion.img 
-              style={{ y: resImageY }}
-              src="/projects/akhil.png" 
-              alt="Residential Architecture" 
-              className="absolute -top-[10%] w-full h-[120%] object-cover object-center"
-            />
+            <motion.div style={{ y: resImageY }} className="absolute -top-[10%] w-full h-[120%]">
+              <Image 
+                src="/projects/akhil.png" 
+                alt="Residential Architecture" 
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -123,12 +131,15 @@ export default function ArchitecturePage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image (Order 1 on Desktop) */}
           <div className="relative h-[60vh] lg:h-[80vh] w-full overflow-hidden rounded-sm shadow-xl order-2 lg:order-1">
-            <motion.img 
-              style={{ y: scaleImageY }}
-              src="/projects/rajasthan.png" 
-              alt="Commercial Architecture" 
-              className="absolute -top-[10%] w-full h-[120%] object-cover object-center"
-            />
+            <motion.div style={{ y: scaleImageY }} className="absolute -top-[10%] w-full h-[120%]">
+              <Image 
+                src="/projects/rajasthan.png" 
+                alt="Commercial Architecture" 
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </motion.div>
           </div>
           {/* Text (Order 2 on Desktop) */}
           <motion.div 

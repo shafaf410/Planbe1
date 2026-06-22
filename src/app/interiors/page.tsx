@@ -3,6 +3,7 @@
 import Navigation from "@/components/Navigation";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 export default function InteriorsPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,12 +42,15 @@ export default function InteriorsPage() {
         
         {/* Left Column Image */}
         <div className="relative h-[80vh] w-full overflow-hidden">
-          <motion.img 
-            style={{ y: y1 }}
-            src="/projects/interior_tactile.png" 
-            alt="Material detail"
-            className="absolute -top-[20%] w-full h-[140%] object-cover object-center scale-110 sepia-[0.3] brightness-75"
-          />
+          <motion.div style={{ y: y1 }} className="absolute -top-[20%] w-full h-[140%]">
+            <Image 
+              src="/projects/interior_tactile.png" 
+              alt="Material detail"
+              fill
+              className="object-cover object-center scale-110 sepia-[0.3] brightness-75"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </motion.div>
           <div className="absolute bottom-8 left-8 right-8 mix-blend-difference">
             <h2 className="font-serif text-3xl uppercase tracking-widest text-[#F7F5F2]">Tactile</h2>
             <p className="font-sans text-[10px] uppercase tracking-widest mt-4 opacity-70">Focus on materiality</p>
@@ -55,12 +59,15 @@ export default function InteriorsPage() {
 
         {/* Right Column Image (Offset) */}
         <div className="relative h-[100vh] w-full md:-mt-48 overflow-hidden">
-          <motion.img 
-            style={{ y: y2 }}
-            src="/projects/interior_light.png" 
-            alt="Interior atmosphere"
-            className="absolute top-0 w-full h-[120%] object-cover object-center scale-[1.15] brightness-50 contrast-125"
-          />
+          <motion.div style={{ y: y2 }} className="absolute top-0 w-full h-[120%]">
+            <Image 
+              src="/projects/interior_light.png" 
+              alt="Interior atmosphere"
+              fill
+              className="object-cover object-center scale-[1.15] brightness-50 contrast-125"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </motion.div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center mix-blend-difference w-full">
             <h2 className="font-serif text-5xl lg:text-7xl uppercase tracking-tight text-[#F7F5F2]">Light</h2>
             <p className="font-sans text-[10px] uppercase tracking-widest mt-4 opacity-70">Shaping the invisible</p>

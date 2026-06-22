@@ -3,6 +3,7 @@
 import Navigation from "@/components/Navigation";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 export default function LandscapePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,10 +31,13 @@ export default function LandscapePage() {
           style={{ y: heroBgY }}
           className="absolute inset-0 z-0"
         >
-          <img 
+          <Image 
             src="/projects/long_view.png" 
             alt="Landscape Architecture Overview"
-            className="w-full h-[120%] object-cover brightness-[0.85] contrast-110"
+            fill
+            className="object-cover brightness-[0.85] contrast-110"
+            priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#111111]/40 via-transparent to-[#F7F5F2]" />
         </motion.div>
@@ -86,12 +90,15 @@ export default function LandscapePage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image */}
           <div className="relative h-[60vh] lg:h-[80vh] w-full overflow-hidden rounded-sm shadow-xl">
-            <motion.img 
-              style={{ y: floraImageY }}
-              src="/projects/landscape_flora.png" 
-              alt="Curated Native Flora" 
-              className="absolute -top-[10%] w-full h-[120%] object-cover object-center"
-            />
+            <motion.div style={{ y: floraImageY }} className="absolute -top-[10%] w-full h-[120%]">
+              <Image 
+                src="/projects/landscape_flora.png" 
+                alt="Curated Native Flora" 
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </motion.div>
           </div>
           {/* Text */}
           <motion.div 
@@ -129,12 +136,15 @@ export default function LandscapePage() {
           </motion.div>
           {/* Image */}
           <div className="relative h-[60vh] lg:h-[80vh] w-full overflow-hidden rounded-sm shadow-xl lg:order-2 order-1">
-            <motion.img 
-              style={{ y: waterImageY }}
-              src="/projects/landscape_water.png" 
-              alt="Minimalist Water Feature" 
-              className="absolute -top-[10%] w-full h-[120%] object-cover object-center"
-            />
+            <motion.div style={{ y: waterImageY }} className="absolute -top-[10%] w-full h-[120%]">
+              <Image 
+                src="/projects/landscape_water.png" 
+                alt="Minimalist Water Feature" 
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
