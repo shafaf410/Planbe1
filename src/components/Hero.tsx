@@ -19,14 +19,12 @@ export default function Hero() {
       ref={containerRef} 
       className="relative w-full h-screen overflow-hidden bg-[#F7F5F2]"
     >
-      {/* Right Video Area with Diagonal Cut */}
+      {/* Full-Screen Blurred Video Background */}
       <motion.div 
         style={{ y, opacity }}
-        className="absolute inset-0 z-0 origin-right"
+        className="absolute inset-0 z-0"
       >
-        <div 
-          className="absolute inset-0 bg-transparent md:[clip-path:polygon(50%_0,100%_0,100%_100%,35%_100%)]"
-        >
+        <div className="absolute inset-0 bg-transparent">
           <video
             autoPlay
             muted
@@ -34,30 +32,27 @@ export default function Hero() {
             playsInline
             disablePictureInPicture
             preload="auto"
-            className="w-full h-full object-cover opacity-95 object-center scale-[1.2]"
+            className="w-full h-full object-cover object-center"
           >
-            <source src="/projects/TensorPix%20-%20video_2026-06-15_22-34-28.mp4" type="video/mp4" />
+            <source src="/hero_section_video.mp4" type="video/mp4" />
           </video>
           
-          {/* Mobile Background Wash for Text Readability */}
-          <div className="absolute inset-0 bg-[#F7F5F2]/30 md:hidden pointer-events-none" />
-          
           {/* Blueprint Overlay Effect */}
-          <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.04] pointer-events-none" />
+          <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.06] pointer-events-none" />
           
           {/* Technical Annotations Overlay */}
-          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block md:[clip-path:polygon(50%_0,100%_0,100%_100%,35%_100%)]">
-            <div className="absolute top-12 right-12 font-mono text-[10px] text-white/40 tracking-widest">
+          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block">
+            <div className="absolute top-32 right-12 font-mono text-[10px] text-[#111111]/30 tracking-widest">
               SEC. A-A&apos;
             </div>
-            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-white/40 tracking-widest flex items-center gap-2">
+            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-[#111111]/30 tracking-widest flex items-center gap-2">
               <ArrowDownRight size={12} />
               ELEVATION 01
             </div>
-            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-white/20" />
-            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-white/40 tracking-widest -rotate-90">
+            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-[#111111]/10" />
+            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-[#111111]/10" />
+            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-[#111111]/10" />
+            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-[#111111]/30 tracking-widest -rotate-90">
               3400MM
             </div>
           </div>

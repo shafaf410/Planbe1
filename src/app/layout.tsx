@@ -28,8 +28,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-[#FAFAFA] text-[#111111]">
+      <body className="min-h-full bg-[#FAFAFA] text-[#111111]" suppressHydrationWarning>
         <TopographicBackground />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
