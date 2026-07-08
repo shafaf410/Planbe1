@@ -37,6 +37,9 @@ export default function Hero() {
             <source src="/hero_section_video.mp4" type="video/mp4" />
           </video>
           
+          {/* Mobile Background Wash for Text Readability */}
+          <div className="absolute inset-0 bg-[#F7F5F2]/30 backdrop-blur-[1px] md:hidden pointer-events-none" />
+          
           {/* Blueprint Overlay Effect */}
           <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.06] pointer-events-none" />
           
@@ -58,7 +61,7 @@ export default function Hero() {
           </div>
         </div>
       </motion.div>
-
+ 
       {/* Left Content Area */}
       <div className="absolute inset-0 w-full md:w-[85%] lg:w-[90%] z-10 flex flex-col justify-start items-start text-left pl-4 sm:pl-6 md:pl-12 lg:pl-16 pr-4 sm:pr-6 md:pr-8 pt-24 sm:pt-[15vh] md:pt-[25vh] pointer-events-none">
         
@@ -70,7 +73,7 @@ export default function Hero() {
               Blueprints
             </h1>
             
-
+ 
             
             <div className="flex flex-col sm:flex-row items-stretch sm:items-start justify-start gap-3 sm:gap-4 w-full sm:max-w-none pointer-events-auto pr-8 sm:pr-0 mt-4 sm:mt-8">
               <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-between sm:justify-start gap-3 hover:bg-black transition-colors duration-300 w-full sm:w-auto">
@@ -84,12 +87,12 @@ export default function Hero() {
         </div>
         
         {/* Bottom Left Blueprint Overlay */}
-        <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 opacity-[0.04] w-64 h-64 pointer-events-none">
+        <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 opacity-[0.04] w-64 h-64 pointer-events-none hidden sm:block">
            <img src="/blueprint-grid.svg" alt="" className="w-full h-full object-cover" />
         </div>
         
         {/* Bottom Center Pagination */}
-        <div className="absolute bottom-6 sm:bottom-10 left-[45%] md:left-1/2 -translate-x-1/2 flex items-center gap-4 text-[10px] font-mono text-[#111111]/80 z-20 pointer-events-none">
+        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 text-[10px] font-mono text-[#111111]/80 z-20 pointer-events-none">
           <span className="text-[#111111] font-bold">01</span> / 05
           <div className="w-12 h-[1px] bg-[#111111]/30" />
         </div>

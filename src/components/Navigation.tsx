@@ -81,7 +81,7 @@ export default function Navigation() {
         className="fixed left-0 right-0 z-[999] w-full px-4 sm:px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-20"
       >
         {/* Left: New Architectural Logo */}
-        <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 z-10 flex items-center group cursor-pointer pointer-events-auto">
+        <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 top-1/2 -translate-y-1/2 z-10 flex items-center group cursor-pointer pointer-events-auto">
           <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center min-w-[44px] min-h-[44px]">
             <Image 
               src="/logo1.png" 
@@ -92,11 +92,11 @@ export default function Navigation() {
             />
           </motion.div>
         </Link>
-
+ 
         {/* Right: Menu Button (Mobile Only) */}
         <MagneticButton 
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-4 sm:right-6 z-10 flex items-center justify-center w-12 h-12 min-w-[44px] min-h-[44px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 min-w-[44px] min-h-[44px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
         >
           <div className="relative w-5 h-3.5 flex flex-col justify-between">
             <motion.span 
