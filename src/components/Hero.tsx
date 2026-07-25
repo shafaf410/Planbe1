@@ -1,15 +1,23 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
 
 const videos = [
   "/new tensopix/TensorPix - Contemporary_house_architectural_202607151334_202607151339-ezremove.mp4",
-  "/new tensopix/TensorPix - Video Project 3-ezremove.mp4",
   "/new tensopix/TensorPix - Video Project 8-ezremove.mp4",
   "/new tensopix/TensorPix - gemini_generated_video_1552f757-ezremove.mp4",
+  "/new tensopix/TensorPix - Video Project 3-ezremove.mp4",
   "/new tensopix/TensorPix - gemini_generated_video_59f4f080-ezremove (1).mp4"
+];
+
+const heroTexts = [
+  "Be Creative",
+  "Be Different",
+  "Be Sustainable",
+  "Be Inspired",
+  "Be Bold"
 ];
 
 export default function Hero() {
@@ -27,7 +35,12 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Initial load: Player A plays video 0, Player B preloads video 1
+  const videoRefABg = useRef<HTMLVideoElement>(null);
+  const videoRefBBg = useRef<HTMLVideoElement>(null);
+
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Initial load
   useEffect(() => {
     if (videoRefA.current) {
       videoRefA.current.src = videos[0];
@@ -39,31 +52,16 @@ export default function Hero() {
       videoRefB.current.load();
       videoRefB.current.pause();
     }
+    
+    return () => {
+      if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+    };
   }, []);
-
-  // Preload effect: whenever active video index or visible player changes,
-  // preload the NEXT video index in sequence on the hidden/inactive player
-  useEffect(() => {
-    const nextIndex = (currentVideoIndex + 1) % videos.length;
-    if (activePlayer === 'A') {
-      const videoB = videoRefB.current;
-      if (videoB && !videoB.src.endsWith(encodeURI(videos[nextIndex]))) {
-        videoB.src = videos[nextIndex];
-        videoB.load();
-        videoB.pause();
-      }
-    } else {
-      const videoA = videoRefA.current;
-      if (videoA && !videoA.src.endsWith(encodeURI(videos[nextIndex]))) {
-        videoA.src = videos[nextIndex];
-        videoA.load();
-        videoA.pause();
-      }
-    }
-  }, [currentVideoIndex, activePlayer]);
 
   const transitionToVideo = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
+
+    setCurrentVideoIndex(nextIndex);
 
     if (activePlayer === 'A') {
       const videoB = videoRefB.current;
@@ -74,8 +72,15 @@ export default function Hero() {
         }
         videoB.play().then(() => {
           setActivePlayer('B');
-          setTimeout(() => {
-            videoRefA.current?.pause();
+          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+          transitionTimeoutRef.current = setTimeout(() => {
+            const videoA = videoRefA.current;
+            if (videoA) {
+              videoA.pause();
+              const nextPreloadIndex = (nextIndex + 1) % videos.length;
+              videoA.src = videos[nextPreloadIndex];
+              videoA.load();
+            }
           }, 1000);
         }).catch(err => {
           console.log("Error transitioning to B:", err);
@@ -91,8 +96,15 @@ export default function Hero() {
         }
         videoA.play().then(() => {
           setActivePlayer('A');
-          setTimeout(() => {
-            videoRefB.current?.pause();
+          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+          transitionTimeoutRef.current = setTimeout(() => {
+            const videoB = videoRefB.current;
+            if (videoB) {
+              videoB.pause();
+              const nextPreloadIndex = (nextIndex + 1) % videos.length;
+              videoB.src = videos[nextPreloadIndex];
+              videoB.load();
+            }
           }, 1000);
         }).catch(err => {
           console.log("Error transitioning to A:", err);
@@ -100,7 +112,6 @@ export default function Hero() {
         });
       }
     }
-    setCurrentVideoIndex(nextIndex);
   };
 
   const handleVideoEnded = () => {
@@ -111,7 +122,7 @@ export default function Hero() {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-screen overflow-hidden bg-[#F7F5F2]"
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#F7F5F2]"
     >
       {/* Full-Screen Blurred Video Background */}
       <motion.div 
@@ -144,8 +155,8 @@ export default function Hero() {
             }`}
           />
           
-          {/* Mobile Background Wash for Text Readability */}
-          <div className="absolute inset-0 bg-[#F7F5F2]/30 backdrop-blur-[1px] md:hidden pointer-events-none" />
+          {/* Dark Overlay for Text Readability */}
+          <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
           
           {/* Blueprint Overlay Effect */}
           <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.06] pointer-events-none" />
@@ -169,29 +180,44 @@ export default function Hero() {
         </div>
       </motion.div>
  
-      {/* Left Content Area */}
-      <div className="absolute inset-0 w-full md:w-[85%] lg:w-[90%] z-10 flex flex-col justify-end items-start text-left pl-4 sm:pl-6 md:pl-12 lg:pl-16 pr-4 sm:pr-6 md:pr-8 pb-16 sm:pb-24 md:pb-28 lg:pb-32 pointer-events-none">
+      {/* Main Content Area */}
+      <div className="absolute inset-0 w-full z-10 flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 md:pt-0 pb-16 sm:pb-24 md:pb-28 lg:pb-32 pointer-events-none gap-4 md:gap-8">
         
-        <div className="pointer-events-auto w-full max-w-xl lg:max-w-2xl relative flex flex-col items-start">
-          <motion.div className="flex flex-col items-start w-full">
-            <h1 className="font-serif text-[2rem] leading-[1.2] sm:text-4xl md:text-5xl lg:text-[4.5rem] md:leading-[1.05] mb-4 sm:mb-6 text-white tracking-tight font-light text-left">
-              Designing<br />
-              Spaces Beyond<br />
-              Blueprints
-            </h1>
-            
- 
-            
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-start justify-start gap-3 sm:gap-4 w-full sm:max-w-none pointer-events-auto pr-8 sm:pr-0 mt-4 sm:mt-8">
-              <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-between sm:justify-start gap-3 hover:bg-black transition-colors duration-300 w-full sm:w-auto">
-                View Projects <ArrowDownRight size={14} className="-rotate-90" />
-              </button>
-              <button className="bg-white text-[#111111] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-between sm:justify-start gap-3 hover:bg-gray-50 transition-colors duration-300 w-full sm:w-auto shadow-sm border border-gray-100">
-                Start Your Project <ArrowDownRight size={14} className="-rotate-90 text-gray-400" />
-              </button>
-            </div>
-          </motion.div>
+        {/* Left Side: Static Text */}
+        <div className="pointer-events-auto flex flex-col items-start text-left w-full md:w-auto">
+          <h2 className="font-serif text-[2.5rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[4.5rem] text-white tracking-tight font-light mb-6 sm:mb-8 md:mb-0">
+            Design your way<br />of being
+          </h2>
         </div>
+
+        {/* Right Side: Dynamic Text Above CTA Buttons */}
+        <div className="pointer-events-auto flex flex-col justify-end items-start w-full md:w-auto mt-2 md:mt-0">
+          
+          <div className="w-full flex items-end justify-start overflow-hidden mb-3 sm:mb-4">
+            <AnimatePresence mode="wait">
+              <motion.h3
+                key={currentVideoIndex}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="font-serif text-3xl sm:text-4xl text-white tracking-wide font-light whitespace-nowrap"
+              >
+                {heroTexts[currentVideoIndex]}
+              </motion.h3>
+            </AnimatePresence>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 w-full sm:w-auto">
+            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-between sm:justify-start gap-3 hover:bg-black transition-colors duration-300">
+              View Projects <ArrowDownRight size={14} className="-rotate-90" />
+            </button>
+            <button className="bg-white text-[#111111] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-between sm:justify-start gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100">
+              Start Your Project <ArrowDownRight size={14} className="-rotate-90 text-gray-400" />
+            </button>
+          </div>
+        </div>
+      </div>
         
         {/* Bottom Left Blueprint Overlay */}
         <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 opacity-[0.04] w-64 h-64 pointer-events-none hidden sm:block">
@@ -224,7 +250,6 @@ export default function Hero() {
             );
           })}
         </div>
-      </div>
     </section>
   );
 }
