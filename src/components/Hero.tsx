@@ -3,12 +3,13 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
+import Image from "next/image";
 
 const videos = [
-  "/new tensopix/TensorPix - Contemporary_house_architectural_202607151334_202607151339-ezremove.mp4",
-  "/new tensopix/TensorPix - Video Project 8-ezremove.mp4",
-  "/new tensopix/TensorPix - gemini_generated_video_1552f757-ezremove.mp4",
-  "/new tensopix/TensorPix - Video Project 3-ezremove.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785004665/TensorPix_-_Contemporary_house_architectural_202607151334_202607151339-ezremove_o7zkhw.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785004912/TensorPix_-_Video_Project_3-ezremove_mnjmnw.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005827/TensorPix_-_gemini_generated_video_1552f757-ezremove_rophuf.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005078/TensorPix_-_Video_Project_8-ezremove_uyq2ym.mp4",
   "/new tensopix/TensorPix - gemini_generated_video_59f4f080-ezremove (1).mp4"
 ];
 
@@ -22,10 +23,8 @@ const heroTexts = [
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRefA = useRef<HTMLVideoElement>(null);
-  const videoRefB = useRef<HTMLVideoElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [activePlayer, setActivePlayer] = useState<'A' | 'B'>('A');
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -35,22 +34,14 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const videoRefABg = useRef<HTMLVideoElement>(null);
-  const videoRefBBg = useRef<HTMLVideoElement>(null);
-
   const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initial load
   useEffect(() => {
-    if (videoRefA.current) {
-      videoRefA.current.src = videos[0];
-      videoRefA.current.load();
-      videoRefA.current.play().catch(err => console.log("Init play A error:", err));
-    }
-    if (videoRefB.current) {
-      videoRefB.current.src = videos[1];
-      videoRefB.current.load();
-      videoRefB.current.pause();
+    // Attempt to auto-play the first video on mount
+    const firstVideo = videoRefs.current[0];
+    if (firstVideo) {
+      firstVideo.play().catch(err => console.log("Init play error:", err));
     }
     
     return () => {
@@ -60,58 +51,32 @@ export default function Hero() {
 
   const transitionToVideo = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
+    
+    const oldIndex = currentVideoIndex;
+    const nextVideo = videoRefs.current[nextIndex];
+    
+    if (nextVideo) {
+      nextVideo.currentTime = 0;
+      nextVideo.play().catch(e => console.log(e));
+    }
 
     setCurrentVideoIndex(nextIndex);
 
-    if (activePlayer === 'A') {
-      const videoB = videoRefB.current;
-      if (videoB) {
-        if (videoB.src !== videos[nextIndex] && !videoB.src.endsWith(encodeURI(videos[nextIndex]))) {
-          videoB.src = videos[nextIndex];
-          videoB.load();
-        }
-        videoB.play().then(() => {
-          setActivePlayer('B');
-          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-          transitionTimeoutRef.current = setTimeout(() => {
-            const videoA = videoRefA.current;
-            if (videoA) {
-              videoA.pause();
-              const nextPreloadIndex = (nextIndex + 1) % videos.length;
-              videoA.src = videos[nextPreloadIndex];
-              videoA.load();
-            }
-          }, 1000);
-        }).catch(err => {
-          console.log("Error transitioning to B:", err);
-          setActivePlayer('B');
-        });
-      }
-    } else {
-      const videoA = videoRefA.current;
-      if (videoA) {
-        if (videoA.src !== videos[nextIndex] && !videoA.src.endsWith(encodeURI(videos[nextIndex]))) {
-          videoA.src = videos[nextIndex];
-          videoA.load();
-        }
-        videoA.play().then(() => {
-          setActivePlayer('A');
-          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-          transitionTimeoutRef.current = setTimeout(() => {
-            const videoB = videoRefB.current;
-            if (videoB) {
-              videoB.pause();
-              const nextPreloadIndex = (nextIndex + 1) % videos.length;
-              videoB.src = videos[nextPreloadIndex];
-              videoB.load();
-            }
-          }, 1000);
-        }).catch(err => {
-          console.log("Error transitioning to A:", err);
-          setActivePlayer('A');
-        });
-      }
+    // Preload the upcoming video metadata if needed
+    const nextPreloadIndex = (nextIndex + 1) % videos.length;
+    const nextPreloadVideo = videoRefs.current[nextPreloadIndex];
+    if (nextPreloadVideo && nextPreloadVideo.readyState === 0) {
+      nextPreloadVideo.load();
     }
+
+    // Clear previous timeout and set new one to pause old video after crossfade
+    if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+    transitionTimeoutRef.current = setTimeout(() => {
+      const oldVideo = videoRefs.current[oldIndex];
+      if (oldVideo) {
+        oldVideo.pause();
+      }
+    }, 1000);
   };
 
   const handleVideoEnded = () => {
@@ -130,50 +95,43 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-transparent">
-          <video
-            ref={videoRefA}
-            autoPlay
-            muted
-            playsInline
-            disablePictureInPicture
-            preload="auto"
-            onEnded={handleVideoEnded}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-              activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
-          <video
-            ref={videoRefB}
-            autoPlay
-            muted
-            playsInline
-            disablePictureInPicture
-            preload="auto"
-            onEnded={handleVideoEnded}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-              activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
+          {videos.map((src, index) => (
+            <video
+              key={src}
+              ref={(el) => { videoRefs.current[index] = el; }}
+              src={src}
+              muted
+              playsInline
+              disablePictureInPicture
+              preload={index === 0 ? "auto" : "none"}
+              onEnded={handleVideoEnded}
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+                currentVideoIndex === index ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+              }`}
+            />
+          ))}
           
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
           
           {/* Blueprint Overlay Effect */}
-          <div className="absolute inset-0 bg-[url('/blueprint-grid.svg')] opacity-[0.06] pointer-events-none" />
+          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+            <Image src="/blueprint-grid.svg" alt="Blueprint Pattern" fill className="object-cover" priority />
+          </div>
           
           {/* Technical Annotations Overlay */}
-          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block">
-            <div className="absolute top-32 right-12 font-mono text-[10px] text-[#111111]/30 tracking-widest">
+          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block z-20">
+            <div className="absolute top-32 right-12 font-mono text-[10px] text-white/50 tracking-widest">
               SEC. A-A&apos;
             </div>
-            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-[#111111]/30 tracking-widest flex items-center gap-2">
+            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-white/50 tracking-widest flex items-center gap-2">
               <ArrowDownRight size={12} />
               ELEVATION 01
             </div>
-            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-[#111111]/10" />
-            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-[#111111]/10" />
-            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-[#111111]/10" />
-            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-[#111111]/30 tracking-widest -rotate-90">
+            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-white/20" />
+            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-white/20" />
+            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-white/20" />
+            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-white/50 tracking-widest -rotate-90">
               3400MM
             </div>
           </div>
@@ -219,37 +177,37 @@ export default function Hero() {
         </div>
       </div>
         
-        {/* Bottom Left Blueprint Overlay */}
-        <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 opacity-[0.04] w-64 h-64 pointer-events-none hidden sm:block">
-           <img src="/blueprint-grid.svg" alt="" className="w-full h-full object-cover" />
-        </div>
-        
-        {/* Bottom Center Pagination & Floating Bars */}
-        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4 z-20 pointer-events-auto">
-          {videos.map((_, index) => {
-            const isActive = index === currentVideoIndex;
-            return (
-              <button
-                key={index}
-                onClick={() => transitionToVideo(index)}
-                className="group flex flex-col items-start gap-1 cursor-pointer focus:outline-none focus-visible:outline-none bg-transparent border-none p-0 transition-all duration-200 active:scale-95 select-none [-webkit-tap-highlight-color:transparent]"
-                aria-label={`Go to video ${index + 1}`}
-              >
-                {/* Number Label */}
-                <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
-                  isActive ? "text-white font-bold" : "text-white/40 group-hover:text-white/80"
-                }`}>
-                  {`0${index + 1}`}
-                </span>
-                
-                {/* Horizontal Bar */}
-                <div className={`w-10 sm:w-20 h-[3px] rounded-full transition-colors duration-300 ${
-                  isActive ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "bg-white/30"
-                }`} />
-              </button>
-            );
-          })}
-        </div>
+      {/* Bottom Left Blueprint Overlay */}
+      <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 w-64 h-64 opacity-[0.04] pointer-events-none hidden sm:block z-10">
+         <Image src="/blueprint-grid.svg" alt="Blueprint Detail" fill className="object-cover" priority />
+      </div>
+      
+      {/* Bottom Center Pagination & Floating Bars */}
+      <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4 z-20 pointer-events-auto">
+        {videos.map((_, index) => {
+          const isActive = index === currentVideoIndex;
+          return (
+            <button
+              key={index}
+              onClick={() => transitionToVideo(index)}
+              className="group flex flex-col items-start gap-1 cursor-pointer focus:outline-none focus-visible:outline-none bg-transparent border-none p-0 transition-all duration-200 active:scale-95 select-none [-webkit-tap-highlight-color:transparent]"
+              aria-label={`Go to video ${index + 1}`}
+            >
+              {/* Number Label */}
+              <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
+                isActive ? "text-white font-bold" : "text-white/40 group-hover:text-white/80"
+              }`}>
+                {`0${index + 1}`}
+              </span>
+              
+              {/* Horizontal Bar */}
+              <div className={`w-10 sm:w-20 h-[3px] rounded-full transition-colors duration-300 ${
+                isActive ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "bg-white/30"
+              }`} />
+            </button>
+          );
+        })}
+      </div>
     </section>
   );
 }
