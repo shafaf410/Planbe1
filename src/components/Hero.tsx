@@ -23,7 +23,12 @@ const heroTexts = [
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  
+  // Player Refs for Double Buffering (Ping-Pong Architecture)
+  const playerARef = useRef<HTMLVideoElement>(null);
+  const playerBRef = useRef<HTMLVideoElement>(null);
+
+  const [activePlayer, setActivePlayer] = useState<'A' | 'B'>('A');
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
@@ -35,14 +40,15 @@ export default function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const pendingVideoIndex = useRef<number | null>(null);
+  const pendingIndexRef = useRef<number | null>(null);
 
   // Initial load
   useEffect(() => {
-    // Attempt to auto-play the first video on mount
-    const firstVideo = videoRefs.current[0];
-    if (firstVideo) {
-      firstVideo.play().catch(err => console.log("Init play error:", err));
+    // Assign Player A the first video and play it
+    if (playerARef.current) {
+      playerARef.current.src = videos[0];
+      playerARef.current.load();
+      playerARef.current.play().catch(err => console.log("Init play error:", err));
     }
     
     return () => {
@@ -53,52 +59,52 @@ export default function Hero() {
   const transitionToVideo = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
     
-    pendingVideoIndex.current = nextIndex;
-    const oldIndex = currentVideoIndex;
-    const nextVideo = videoRefs.current[nextIndex];
+    pendingIndexRef.current = nextIndex;
     
-    if (nextVideo) {
-      // If the video already has enough data to play, transition immediately
-      if (nextVideo.readyState >= 3) {
-        executeTransition(nextIndex, oldIndex, nextVideo);
+    const inactivePlayerRef = activePlayer === 'A' ? playerBRef : playerARef;
+    const oldPlayerRef = activePlayer === 'A' ? playerARef : playerBRef;
+    const nextPlayerName = activePlayer === 'A' ? 'B' : 'A';
+
+    if (inactivePlayerRef.current && oldPlayerRef.current) {
+      const nextVideoEl = inactivePlayerRef.current;
+      
+      // Update the source directly on the DOM node to bypass React render cycle for instant loading
+      nextVideoEl.src = videos[nextIndex];
+      nextVideoEl.load();
+
+      const handleCanPlay = () => {
+        nextVideoEl.removeEventListener("canplay", handleCanPlay);
+        
+        // Only execute if the user hasn't rapidly clicked another slide while waiting
+        if (pendingIndexRef.current !== nextIndex) return;
+
+        // Play the new video
+        nextVideoEl.currentTime = 0;
+        nextVideoEl.play().catch(e => console.log("Transition play error:", e));
+        
+        // Trigger the visual CSS crossfade
+        setActivePlayer(nextPlayerName);
+        setCurrentVideoIndex(nextIndex);
+
+        // Clean up the old video after the fade is completely finished
+        if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+        transitionTimeoutRef.current = setTimeout(() => {
+          if (oldPlayerRef.current) {
+            oldPlayerRef.current.pause();
+            // Free up GPU memory by dumping the src of the hidden player
+            oldPlayerRef.current.removeAttribute('src'); 
+            oldPlayerRef.current.load();
+          }
+        }, 1000);
+      };
+
+      // If the browser miraculously already buffered it instantly
+      if (nextVideoEl.readyState >= 3) {
+        handleCanPlay();
       } else {
-        // Otherwise, wait for it to buffer
-        nextVideo.load();
-        
-        const handleCanPlay = () => {
-          nextVideo.removeEventListener("canplay", handleCanPlay);
-          // Only execute if the user hasn't rapidly clicked another slide while we were waiting
-          if (pendingVideoIndex.current !== nextIndex) return;
-          
-          executeTransition(nextIndex, oldIndex, nextVideo);
-        };
-        
-        nextVideo.addEventListener("canplay", handleCanPlay);
+        nextVideoEl.addEventListener("canplay", handleCanPlay);
       }
     }
-  };
-
-  const executeTransition = (nextIndex: number, oldIndex: number, nextVideo: HTMLVideoElement) => {
-    nextVideo.currentTime = 0;
-    nextVideo.play().catch(e => console.log("Transition play error:", e));
-    
-    setCurrentVideoIndex(nextIndex);
-
-    // Preload the upcoming video metadata if needed
-    const nextPreloadIndex = (nextIndex + 1) % videos.length;
-    const nextPreloadVideo = videoRefs.current[nextPreloadIndex];
-    if (nextPreloadVideo && nextPreloadVideo.readyState === 0) {
-      nextPreloadVideo.load();
-    }
-
-    // Clear previous timeout and set new one to pause old video after crossfade
-    if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-    transitionTimeoutRef.current = setTimeout(() => {
-      const oldVideo = videoRefs.current[oldIndex];
-      if (oldVideo) {
-        oldVideo.pause();
-      }
-    }, 1000);
   };
 
   const handleVideoEnded = () => {
@@ -117,26 +123,33 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-transparent">
-          {videos.map((src, index) => (
-            <video
-              key={src}
-              ref={(el) => { videoRefs.current[index] = el; }}
-              src={src}
-              muted
-              playsInline
-              disablePictureInPicture
-              preload={index === 0 ? "auto" : "none"}
-              onEnded={handleVideoEnded}
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-                currentVideoIndex === index ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-              }`}
-            />
-          ))}
+          {/* Player A */}
+          <video
+            ref={playerARef}
+            muted
+            playsInline
+            disablePictureInPicture
+            preload="auto"
+            onEnded={handleVideoEnded}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+              activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
+          />
+          {/* Player B */}
+          <video
+            ref={playerBRef}
+            muted
+            playsInline
+            disablePictureInPicture
+            preload="none"
+            onEnded={handleVideoEnded}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+              activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
+          />
           
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
-          
-
           
           {/* Technical Annotations Overlay */}
           <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block z-20">
