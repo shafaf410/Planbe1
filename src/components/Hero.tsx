@@ -10,7 +10,7 @@ const videos = [
   "https://res.cloudinary.com/ntliyhwb/video/upload/v1785004912/TensorPix_-_Video_Project_3-ezremove_mnjmnw.mp4",
   "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005827/TensorPix_-_gemini_generated_video_1552f757-ezremove_rophuf.mp4",
   "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005078/TensorPix_-_Video_Project_8-ezremove_uyq2ym.mp4",
-  "/new tensopix/TensorPix - gemini_generated_video_59f4f080-ezremove (1).mp4"
+  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785006719/TensorPix_-_gemini_generated_video_59f4f080-ezremove_1_qsfhjp.mp4"
 ];
 
 const heroTexts = [
@@ -35,6 +35,7 @@ export default function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingVideoIndex = useRef<number | null>(null);
 
   // Initial load
   useEffect(() => {
@@ -52,14 +53,35 @@ export default function Hero() {
   const transitionToVideo = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
     
+    pendingVideoIndex.current = nextIndex;
     const oldIndex = currentVideoIndex;
     const nextVideo = videoRefs.current[nextIndex];
     
     if (nextVideo) {
-      nextVideo.currentTime = 0;
-      nextVideo.play().catch(e => console.log(e));
+      // If the video already has enough data to play, transition immediately
+      if (nextVideo.readyState >= 3) {
+        executeTransition(nextIndex, oldIndex, nextVideo);
+      } else {
+        // Otherwise, wait for it to buffer
+        nextVideo.load();
+        
+        const handleCanPlay = () => {
+          nextVideo.removeEventListener("canplay", handleCanPlay);
+          // Only execute if the user hasn't rapidly clicked another slide while we were waiting
+          if (pendingVideoIndex.current !== nextIndex) return;
+          
+          executeTransition(nextIndex, oldIndex, nextVideo);
+        };
+        
+        nextVideo.addEventListener("canplay", handleCanPlay);
+      }
     }
+  };
 
+  const executeTransition = (nextIndex: number, oldIndex: number, nextVideo: HTMLVideoElement) => {
+    nextVideo.currentTime = 0;
+    nextVideo.play().catch(e => console.log("Transition play error:", e));
+    
     setCurrentVideoIndex(nextIndex);
 
     // Preload the upcoming video metadata if needed
@@ -114,10 +136,7 @@ export default function Hero() {
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
           
-          {/* Blueprint Overlay Effect */}
-          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-            <Image src="/blueprint-grid.svg" alt="Blueprint Pattern" fill className="object-cover" priority />
-          </div>
+
           
           {/* Technical Annotations Overlay */}
           <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block z-20">
@@ -177,10 +196,7 @@ export default function Hero() {
         </div>
       </div>
         
-      {/* Bottom Left Blueprint Overlay */}
-      <div className="absolute bottom-8 left-16 md:left-24 lg:left-40 w-64 h-64 opacity-[0.04] pointer-events-none hidden sm:block z-10">
-         <Image src="/blueprint-grid.svg" alt="Blueprint Detail" fill className="object-cover" priority />
-      </div>
+
       
       {/* Bottom Center Pagination & Floating Bars */}
       <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4 z-20 pointer-events-auto">
