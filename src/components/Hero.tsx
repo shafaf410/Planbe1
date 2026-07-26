@@ -187,10 +187,10 @@ export default function Hero() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 sm:gap-4 w-auto">
-            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-black transition-colors duration-300">
+            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-black transition-colors duration-300 rounded-full">
               View Projects <ArrowDownRight size={14} className="-rotate-90" />
             </button>
-            <button className="bg-white text-[#111111] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100">
+            <button className="bg-white text-[#111111] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100 rounded-full">
               Start Your Project <ArrowDownRight size={14} className="-rotate-90 text-gray-400" />
             </button>
           </div>
