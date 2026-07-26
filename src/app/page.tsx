@@ -18,26 +18,51 @@ export default function LandingPage() {
             animate={{ 
               scale: [0.9, 1, 1], 
               opacity: [0, 1, 1],
-              y: [0, -10, 0] // subtle floating animation
+              y: [0, -5, 0] // extremely subtle floating for the whole logo
             }}
             transition={{ 
               duration: 3, 
               ease: "easeOut",
               y: {
-                duration: 2,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut"
               }
             }}
             className="mb-12 relative flex items-center justify-center w-64 h-64 md:w-80 md:h-80"
           >
+            {/* Base Logo (Everything except 'e') */}
             <Image 
-              src="/logo_new.jpeg" 
-              alt="PLAN Bë Logo" 
+              src="/logo_base.png" 
+              alt="PLAN B Logo Base" 
               fill
-              className="object-contain"
+              className="object-contain z-10"
               priority
             />
+            
+            {/* The Animated 'e' Layer */}
+            <motion.div
+              animate={{
+                rotate: [0, 15, -10, 5, 0],
+                y: [0, -10, 0, -5, 0]
+              }}
+              transition={{
+                duration: 3,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatDelay: 1.5
+              }}
+              className="absolute inset-0 z-20"
+              style={{ originX: 0.818, originY: 0.637 }}
+            >
+              <Image 
+                src="/logo_e.png" 
+                alt="Animated 'e'" 
+                fill
+                className="object-contain"
+                priority
+              />
+            </motion.div>
           </motion.div>
 
         {/* Enter Site Button */}
