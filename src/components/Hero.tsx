@@ -50,6 +50,11 @@ export default function Hero() {
       playerARef.current.load();
       playerARef.current.play().catch(err => console.log("Init play error:", err));
     }
+    // Preload Player B with the second video
+    if (playerBRef.current) {
+      playerBRef.current.src = videos[1];
+      playerBRef.current.load();
+    }
     
     return () => {
       if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
@@ -68,40 +73,39 @@ export default function Hero() {
     if (inactivePlayerRef.current && oldPlayerRef.current) {
       const nextVideoEl = inactivePlayerRef.current;
       
-      // Update the source directly on the DOM node to bypass React render cycle for instant loading
-      nextVideoEl.src = videos[nextIndex];
-      nextVideoEl.load();
+      // If the inactive player isn't already preloaded with the correct video, load it now
+      // (This happens if the user clicks out of sequence)
+      if (!nextVideoEl.src.includes(videos[nextIndex])) {
+        nextVideoEl.src = videos[nextIndex];
+        nextVideoEl.load();
+      }
       
-      // CRITICAL FIX: We must call .play() synchronously right now to satisfy iOS Safari's "User Gesture" requirement. 
-      // If we wait to call .play() inside the async canplay callback, iOS might block or heavily throttle it, causing massive lag!
       nextVideoEl.play().catch(e => console.log("Init transition play error:", e));
 
       const handleCanPlay = () => {
         nextVideoEl.removeEventListener("canplay", handleCanPlay);
         
-        // Only execute if the user hasn't rapidly clicked another slide while waiting
         if (pendingIndexRef.current !== nextIndex) {
-            nextVideoEl.pause(); // Clean up if they clicked away
+            nextVideoEl.pause();
             return;
         }
 
-        // Trigger the visual CSS crossfade
         setActivePlayer(nextPlayerName);
         setCurrentVideoIndex(nextIndex);
 
-        // Clean up the old video after the fade is completely finished
         if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
         transitionTimeoutRef.current = setTimeout(() => {
           if (oldPlayerRef.current) {
             oldPlayerRef.current.pause();
-            // Free up GPU memory by dumping the src of the hidden player
-            oldPlayerRef.current.removeAttribute('src'); 
+            // Aggressively PRELOAD the next sequential video into the now-hidden player
+            // instead of clearing it, so the next slide is instant!
+            const preloadIndex = (nextIndex + 1) % videos.length;
+            oldPlayerRef.current.src = videos[preloadIndex];
             oldPlayerRef.current.load();
           }
         }, 1000);
       };
 
-      // If the browser miraculously already buffered it instantly
       if (nextVideoEl.readyState >= 3) {
         handleCanPlay();
       } else {
