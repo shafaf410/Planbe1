@@ -59,9 +59,6 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Hide navigation on the root loading/splash page
-  if (pathname === '/') return null;
-
   useEffect(() => {
     const updateScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -76,6 +73,9 @@ export default function Navigation() {
   const navPaddingY = useTransform(scrollY, [0, 100], [16, 10]);
   const blurValue = useTransform(scrollY, [0, 100], [12, 24]);
   const logoScale = useTransform(scrollY, [0, 100], [1, 0.9]);
+
+  // Hide navigation on the root loading/splash page AFTER all hooks are called
+  if (pathname === '/') return null;
 
   return (
     <>
