@@ -15,36 +15,29 @@ export default function LandingPage() {
         {/* Animated Logo */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+            animate={{ 
+              scale: [0.9, 1, 1], 
+              opacity: [0, 1, 1],
+              y: [0, -10, 0] // subtle floating animation
+            }}
+            transition={{ 
+              duration: 3, 
+              ease: "easeOut",
+              y: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
             className="mb-12 relative flex items-center justify-center w-64 h-64 md:w-80 md:h-80"
           >
-            {/* The Logo Box */}
-            <div className="relative border-4 border-[#111111] w-48 h-48 md:w-56 md:h-56 flex items-center justify-center bg-white shadow-xl">
-              <div className="font-sans font-medium text-3xl md:text-4xl tracking-[0.2em] flex items-center text-[#111111] whitespace-nowrap z-10 absolute bg-white px-2">
-                PLAN B
-                <motion.span
-                  initial={{ rotate: 0, y: 0 }}
-                  animate={{ 
-                    rotate: [0, -10, 15, -15, 0], 
-                    y: [0, -15, 0, -5, 0] 
-                  }}
-                  transition={{ 
-                    duration: 2.5, 
-                    ease: "easeInOut", 
-                    repeat: Infinity,
-                    repeatDelay: 1
-                  }}
-                  className="inline-block origin-bottom text-black"
-                  style={{ textShadow: "0px 2px 10px rgba(0,0,0,0.1)" }}
-                >
-                  ë
-                </motion.span>
-              </div>
-              
-              {/* Optional: The missing border gap illusion */}
-              <div className="absolute bottom-[-4px] right-[10%] w-1/3 h-[8px] bg-white z-0" />
-            </div>
+            <Image 
+              src="/logo_new.jpeg" 
+              alt="PLAN Bë Logo" 
+              fill
+              className="object-contain"
+              priority
+            />
           </motion.div>
 
         {/* Enter Site Button */}
