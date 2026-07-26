@@ -71,17 +71,20 @@ export default function Hero() {
       // Update the source directly on the DOM node to bypass React render cycle for instant loading
       nextVideoEl.src = videos[nextIndex];
       nextVideoEl.load();
+      
+      // CRITICAL FIX: We must call .play() synchronously right now to satisfy iOS Safari's "User Gesture" requirement. 
+      // If we wait to call .play() inside the async canplay callback, iOS might block or heavily throttle it, causing massive lag!
+      nextVideoEl.play().catch(e => console.log("Init transition play error:", e));
 
       const handleCanPlay = () => {
         nextVideoEl.removeEventListener("canplay", handleCanPlay);
         
         // Only execute if the user hasn't rapidly clicked another slide while waiting
-        if (pendingIndexRef.current !== nextIndex) return;
+        if (pendingIndexRef.current !== nextIndex) {
+            nextVideoEl.pause(); // Clean up if they clicked away
+            return;
+        }
 
-        // Play the new video
-        nextVideoEl.currentTime = 0;
-        nextVideoEl.play().catch(e => console.log("Transition play error:", e));
-        
         // Trigger the visual CSS crossfade
         setActivePlayer(nextPlayerName);
         setCurrentVideoIndex(nextIndex);
