@@ -73,6 +73,7 @@ export default function Navigation() {
   const navPaddingY = useTransform(scrollY, [0, 100], [16, 10]);
   const blurValue = useTransform(scrollY, [0, 100], [12, 24]);
   const logoScale = useTransform(scrollY, [0, 100], [1, 0.9]);
+  const blurFilter = useTransform(blurValue, v => `blur(${v}px)`);
 
   // Hide navigation on the root loading/splash page AFTER all hooks are called
   if (pathname === '/') return null;
@@ -101,9 +102,9 @@ export default function Navigation() {
           onClick={() => setIsOpen(!isOpen)}
           className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 min-w-[44px] min-h-[44px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
         >
-          <div className="relative w-5 h-3.5 flex flex-col justify-between">
+          <div className="relative w-4 h-3 flex flex-col justify-between items-center pointer-events-none">
             <motion.span 
-              animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 6 : 0 }}
+              animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 5 : 0 }}
               className="w-full h-[1px] bg-[#111111] origin-center"
             />
             <motion.span 
@@ -118,7 +119,7 @@ export default function Navigation() {
         </MagneticButton>
 
         <motion.div
-          style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: useTransform(blurValue, v => `blur(${v}px)`) }}
+          style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: blurFilter }}
           className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center px-6 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
         >
         {/* Subtle Blueprint Grid Texture */}
