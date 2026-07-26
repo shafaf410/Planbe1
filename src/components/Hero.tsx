@@ -154,22 +154,7 @@ export default function Hero() {
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
           
-          {/* Technical Annotations Overlay */}
-          <div className="absolute inset-0 pointer-events-none m-4 md:m-8 hidden md:block z-20">
-            <div className="absolute top-32 right-12 font-mono text-[10px] text-white/50 tracking-widest">
-              SEC. A-A&apos;
-            </div>
-            <div className="absolute bottom-12 right-12 font-mono text-[10px] text-white/50 tracking-widest flex items-center gap-2">
-              <ArrowDownRight size={12} />
-              ELEVATION 01
-            </div>
-            <div className="absolute top-1/2 right-4 w-[1px] h-32 bg-white/20" />
-            <div className="absolute top-1/2 right-4 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-4 translate-y-32 w-4 h-[1px] bg-white/20" />
-            <div className="absolute top-1/2 right-10 translate-y-16 font-mono text-[10px] text-white/50 tracking-widest -rotate-90">
-              3400MM
-            </div>
-          </div>
+
         </div>
       </motion.div>
  
