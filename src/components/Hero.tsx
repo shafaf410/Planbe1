@@ -167,7 +167,7 @@ export default function Hero() {
         
         {/* Left Side: Static Text */}
         <div className="pointer-events-auto flex flex-col items-start text-left w-full md:w-auto">
-          <h2 className="font-serif text-[2.5rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[4.5rem] text-white tracking-tight font-light mb-6 sm:mb-8 md:mb-0">
+          <h2 className="font-serif text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[4.5rem] text-white tracking-tight font-light mb-6 sm:mb-8 md:mb-0">
             Design your way<br />of being
           </h2>
         </div>
@@ -190,11 +190,11 @@ export default function Hero() {
             </AnimatePresence>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 sm:gap-4 w-auto">
-            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-black transition-colors duration-300 rounded-full">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2.5 sm:gap-4 w-auto">
+            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-[11px] sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3.5 min-h-[38px] sm:min-h-[44px] flex items-center justify-start gap-2 sm:gap-3 hover:bg-black transition-colors duration-300 rounded-full">
               View Projects <ArrowDownRight size={14} className="-rotate-90" />
             </button>
-            <button className="bg-white text-[#111111] font-sans text-xs sm:text-sm px-6 py-3.5 min-h-[44px] flex items-center justify-start gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100 rounded-full">
+            <button className="bg-white text-[#111111] font-sans text-[11px] sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3.5 min-h-[38px] sm:min-h-[44px] flex items-center justify-start gap-2 sm:gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100 rounded-full">
               Start Your Project <ArrowDownRight size={14} className="-rotate-90 text-gray-400" />
             </button>
           </div>
