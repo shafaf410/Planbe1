@@ -6,11 +6,11 @@ import { ArrowDownRight } from "lucide-react";
 import Image from "next/image";
 
 const videos = [
-  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785004665/TensorPix_-_Contemporary_house_architectural_202607151334_202607151339-ezremove_o7zkhw.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785004912/TensorPix_-_Video_Project_3-ezremove_mnjmnw.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005827/TensorPix_-_gemini_generated_video_1552f757-ezremove_rophuf.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785005078/TensorPix_-_Video_Project_8-ezremove_uyq2ym.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/v1785006719/TensorPix_-_gemini_generated_video_59f4f080-ezremove_1_qsfhjp.mp4"
+  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785004665/TensorPix_-_Contemporary_house_architectural_202607151334_202607151339-ezremove_o7zkhw.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785004912/TensorPix_-_Video_Project_3-ezremove_mnjmnw.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785005827/TensorPix_-_gemini_generated_video_1552f757-ezremove_rophuf.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785005078/TensorPix_-_Video_Project_8-ezremove_uyq2ym.mp4",
+  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785006719/TensorPix_-_gemini_generated_video_59f4f080-ezremove_1_qsfhjp.mp4"
 ];
 
 const heroTexts = [
