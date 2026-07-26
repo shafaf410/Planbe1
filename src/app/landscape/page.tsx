@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -21,7 +21,7 @@ export default function LandscapePage() {
 
   return (
     <main ref={containerRef} className="bg-[#F7F5F2] min-h-screen text-[#111111] overflow-hidden">
-      <Navigation />
+      
       
       {/* 1. HERO SECTION (Clean, Bright, Architectural) */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">

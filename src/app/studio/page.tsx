@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
@@ -11,7 +11,7 @@ export default function StudioPage() {
 
   return (
     <main className="bg-[#F7F5F2] min-h-screen text-[#111111] overflow-hidden">
-      <Navigation />
+      
       
       {/* Hero Statement */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-32">

@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -21,7 +21,7 @@ export default function ArchitecturePage() {
 
   return (
     <main ref={containerRef} className="bg-[#F7F5F2] min-h-screen text-[#111111] overflow-hidden">
-      <Navigation />
+      
       
       {/* 1. Header Section (Increased Top Padding to avoid Navigation clash) */}
       <section className="pt-[20vh] md:pt-[25vh] pb-16 px-6 flex flex-col justify-center items-center text-center">

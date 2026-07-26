@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="min-h-screen bg-transparent text-[#111111]">
-      <Navigation />
+      
       <Hero />
       <div className="relative w-full overflow-hidden">
         <div className="relative z-10 w-full">

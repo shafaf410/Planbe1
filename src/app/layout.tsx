@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/SmoothScrolling";
 import TopographicBackground from "@/components/TopographicBackground";
-
+import Navigation from "@/components/Navigation";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -34,6 +34,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[#FAFAFA] text-[#111111]" suppressHydrationWarning>
         <TopographicBackground />
+        <Navigation />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>

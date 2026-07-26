@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -16,7 +16,7 @@ export default function InteriorsPage() {
 
   return (
     <main ref={containerRef} className="bg-[#111111] min-h-[300vh] text-[#F7F5F2] overflow-hidden">
-      <Navigation />
+      
       
       {/* Editorial Header */}
       <section className="h-screen flex flex-col justify-end pb-32 px-6 md:px-24">

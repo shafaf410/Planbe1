@@ -1,12 +1,12 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { motion } from "framer-motion";
 
 export default function ContactPage() {
   return (
     <main className="bg-[#111111] min-h-screen text-[#F7F5F2] selection:bg-[#F7F5F2] selection:text-[#111111] overflow-hidden">
-      <Navigation />
+      
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pt-32 md:pt-48 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-24">
         

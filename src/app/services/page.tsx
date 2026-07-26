@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +39,7 @@ const services = [
 export default function ServicesPage() {
   return (
     <main className="min-h-screen bg-[#F7F5F2] text-[#111111]">
-      <Navigation />
+      
       
       <section className="pt-32 md:pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <motion.div 
