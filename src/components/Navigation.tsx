@@ -88,7 +88,7 @@ export default function Navigation() {
         <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 top-1/2 -translate-y-1/2 z-10 flex items-center group cursor-pointer pointer-events-auto">
           <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center min-w-[44px] min-h-[44px]">
             <Image 
-              src="/logo1.png" 
+              src="/logo_new.jpeg" 
               alt="PLAN Bë Logo" 
               width={100} 
               height={100} 
