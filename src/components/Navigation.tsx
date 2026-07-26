@@ -59,6 +59,9 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Hide navigation on the root loading/splash page
+  if (pathname === '/') return null;
+
   useEffect(() => {
     const updateScroll = () => {
       setIsScrolled(window.scrollY > 50);
