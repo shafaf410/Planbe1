@@ -86,13 +86,13 @@ export default function Navigation() {
       >
         {/* Left: New Architectural Logo */}
         <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 top-1/2 -translate-y-1/2 z-10 flex items-center group cursor-pointer pointer-events-auto">
-          <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center min-w-[64px] min-h-[64px]">
+          <motion.div style={{ scale: logoScale }} className="relative flex items-center justify-center min-w-[96px] min-h-[96px]">
             <Image 
-              src="/logo_new.jpeg" 
+              src="/logo_new.png" 
               alt="PLAN Bë Logo" 
-              width={150} 
-              height={150} 
-              className="w-16 md:w-24 h-auto object-contain transition-transform duration-500 group-hover:scale-105" 
+              width={200} 
+              height={200} 
+              className="w-28 md:w-44 h-auto object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" 
             />
           </motion.div>
         </Link>
