@@ -37,6 +37,16 @@ export default function LandingPage() {
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#FAFAFA] text-[#111111] overflow-hidden">
+      
+      {/* Eagerly preload the first video of the home page so it's ready the instant we redirect */}
+      <video 
+        src="https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785004665/TensorPix_-_Contemporary_house_architectural_202607151334_202607151339-ezremove_o7zkhw.mp4" 
+        preload="auto" 
+        className="hidden" 
+        muted 
+        playsInline 
+      />
+
       <div className="z-10 flex flex-col items-center justify-center space-y-16">
         {/* Animated Logo */}
         <motion.div

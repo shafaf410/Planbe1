@@ -189,7 +189,7 @@ export default function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[998] flex flex-col items-center justify-center bg-[#F7F5F2]/95 backdrop-blur-md md:hidden pointer-events-auto"
+            className="fixed inset-0 z-[998] flex flex-col items-center justify-center bg-[#F7F5F2]/95 backdrop-blur-md lg:hidden pointer-events-auto"
           >
             <nav className="flex flex-col items-center space-y-8">
               {navLinks.map((link, index) => {

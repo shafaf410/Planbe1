@@ -23,12 +23,8 @@ const heroTexts = [
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Player Refs for Double Buffering (Ping-Pong Architecture)
-  const playerARef = useRef<HTMLVideoElement>(null);
-  const playerBRef = useRef<HTMLVideoElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  const [activePlayer, setActivePlayer] = useState<'A' | 'B'>('A');
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
@@ -39,84 +35,26 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const pendingIndexRef = useRef<number | null>(null);
-
-  // Initial load
+  // Handle playing/pausing when the index changes
   useEffect(() => {
-    // Assign Player A the first video and play it
-    if (playerARef.current) {
-      playerARef.current.src = videos[0];
-      playerARef.current.load();
-      playerARef.current.play().catch(err => console.log("Init play error:", err));
-    }
-    // Preload Player B with the second video
-    if (playerBRef.current) {
-      playerBRef.current.src = videos[1];
-      playerBRef.current.load();
-    }
-    
-    return () => {
-      if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-    };
-  }, []);
+    videoRefs.current.forEach((vid, idx) => {
+      if (!vid) return;
+      if (idx === currentVideoIndex) {
+        vid.currentTime = 0;
+        vid.play().catch(e => console.log("Play error:", e));
+      } else {
+        vid.pause();
+      }
+    });
+  }, [currentVideoIndex]);
 
   const transitionToVideo = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
-    
-    pendingIndexRef.current = nextIndex;
-    
-    const inactivePlayerRef = activePlayer === 'A' ? playerBRef : playerARef;
-    const oldPlayerRef = activePlayer === 'A' ? playerARef : playerBRef;
-    const nextPlayerName = activePlayer === 'A' ? 'B' : 'A';
-
-    if (inactivePlayerRef.current && oldPlayerRef.current) {
-      const nextVideoEl = inactivePlayerRef.current;
-      
-      // If the inactive player isn't already preloaded with the correct video, load it now
-      // (This happens if the user clicks out of sequence)
-      if (!nextVideoEl.src.includes(videos[nextIndex])) {
-        nextVideoEl.src = videos[nextIndex];
-        nextVideoEl.load();
-      }
-      
-      nextVideoEl.play().catch(e => console.log("Init transition play error:", e));
-
-      const handleCanPlay = () => {
-        nextVideoEl.removeEventListener("canplay", handleCanPlay);
-        
-        if (pendingIndexRef.current !== nextIndex) {
-            nextVideoEl.pause();
-            return;
-        }
-
-        setActivePlayer(nextPlayerName);
-        setCurrentVideoIndex(nextIndex);
-
-        if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-        transitionTimeoutRef.current = setTimeout(() => {
-          if (oldPlayerRef.current) {
-            oldPlayerRef.current.pause();
-            // Aggressively PRELOAD the next sequential video into the now-hidden player
-            // instead of clearing it, so the next slide is instant!
-            const preloadIndex = (nextIndex + 1) % videos.length;
-            oldPlayerRef.current.src = videos[preloadIndex];
-            oldPlayerRef.current.load();
-          }
-        }, 1000);
-      };
-
-      if (nextVideoEl.readyState >= 3) {
-        handleCanPlay();
-      } else {
-        nextVideoEl.addEventListener("canplay", handleCanPlay);
-      }
-    }
+    setCurrentVideoIndex(nextIndex);
   };
 
   const handleVideoEnded = () => {
-    const nextIndex = (currentVideoIndex + 1) % videos.length;
-    transitionToVideo(nextIndex);
+    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
   };
 
   return (
@@ -130,35 +68,26 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-transparent">
-          {/* Player A */}
-          <video
-            ref={playerARef}
-            muted
-            playsInline
-            disablePictureInPicture
-            preload="auto"
-            onEnded={handleVideoEnded}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-              activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
-          {/* Player B */}
-          <video
-            ref={playerBRef}
-            muted
-            playsInline
-            disablePictureInPicture
-            preload="none"
-            onEnded={handleVideoEnded}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-              activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
+          {videos.map((src, index) => (
+            <video
+              key={src}
+              ref={(el) => {
+                videoRefs.current[index] = el;
+              }}
+              src={src}
+              muted
+              playsInline
+              disablePictureInPicture
+              preload="auto"
+              onEnded={handleVideoEnded}
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+                index === currentVideoIndex ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+              }`}
+            />
+          ))}
           
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
-          
-
         </div>
       </motion.div>
  
