@@ -70,7 +70,7 @@ export default function Navigation() {
 
   // Scroll animations
   const navTop = useTransform(scrollY, [0, 100], [24, 16]);
-  const navPaddingY = useTransform(scrollY, [0, 100], [16, 10]);
+  const navPaddingY = useTransform(scrollY, [0, 100], [8, 4]);
   const blurValue = useTransform(scrollY, [0, 100], [12, 24]);
   const logoScale = useTransform(scrollY, [0, 100], [1, 0.9]);
   const blurFilter = useTransform(blurValue, v => `blur(${v}px)`);
@@ -82,7 +82,7 @@ export default function Navigation() {
     <>
       <motion.header
         style={{ top: navTop }}
-        className="fixed left-0 right-0 z-[999] w-full px-4 sm:px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-20"
+        className="fixed left-0 right-0 z-[999] w-full px-4 sm:px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-center md:justify-between pointer-events-none h-16"
       >
         {/* Left: New Architectural Logo */}
         <Link href="/home" className="absolute left-4 sm:left-6 md:left-12 top-1/2 -translate-y-1/2 z-10 flex items-center group cursor-pointer pointer-events-auto">
@@ -92,7 +92,7 @@ export default function Navigation() {
               alt="PLAN Bë Logo" 
               width={100} 
               height={100} 
-              className="w-14 md:w-20 h-auto object-contain transition-transform duration-500 group-hover:scale-105" 
+              className="w-12 md:w-16 h-auto object-contain transition-transform duration-500 group-hover:scale-105" 
             />
           </motion.div>
         </Link>
@@ -100,27 +100,27 @@ export default function Navigation() {
         {/* Right: Menu Button (Mobile Only) */}
         <MagneticButton 
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 min-w-[44px] min-h-[44px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
         >
           <div className="relative w-4 h-3 flex flex-col justify-between items-center pointer-events-none">
             <motion.span 
               animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 5 : 0 }}
-              className="w-full h-[1px] bg-[#111111] origin-center"
+              className="w-full h-[1px] bg-black origin-center"
             />
             <motion.span 
               animate={{ opacity: isOpen ? 0 : 1 }}
-              className="w-full h-[1px] bg-[#111111]"
+              className="w-full h-[1px] bg-black"
             />
             <motion.span 
               animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -6 : 0 }}
-              className="w-full h-[1px] bg-[#111111] origin-center"
+              className="w-full h-[1px] bg-black origin-center"
             />
           </div>
         </MagneticButton>
 
         <motion.div
           style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: blurFilter }}
-          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center px-6 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
+          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center px-4 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
         >
         {/* Subtle Blueprint Grid Texture */}
         <div 
@@ -131,16 +131,16 @@ export default function Navigation() {
           }}
         />
         {/* Center: Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 relative z-10 ml-4 md:ml-0">
+        <nav className="hidden md:flex items-center space-x-1 relative z-10 ml-2 md:ml-0">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link 
                 key={link.href} 
                 href={link.href}
-                className="relative px-5 py-2 group"
+                className="relative px-4 py-1.5 group"
               >
-                <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-[#111111]/70 group-hover:text-[#111111] transition-colors duration-300">
+                <span className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-black transition-colors duration-300">
                   {link.label}
                 </span>
                 
@@ -148,13 +148,13 @@ export default function Navigation() {
                 {isActive && (
                   <motion.div 
                     layoutId="activeDot"
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#111111]"
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-black"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
 
                 {/* Hover Animation: Blueprint Line */}
-                <div className="absolute bottom-1 left-0 w-full h-[1px] bg-[#111111]/30 scale-x-0 origin-left transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                <div className="absolute bottom-1 left-0 w-full h-[1px] bg-black/30 scale-x-0 origin-left transition-transform duration-500 ease-out group-hover:scale-x-100" />
               </Link>
             );
           })}
@@ -162,16 +162,16 @@ export default function Navigation() {
           {/* CONTACT Link (Primary Action) */}
           <Link 
             href="/contact"
-            className="relative px-6 py-2 ml-4 group"
+            className="relative px-5 py-1.5 ml-2 group"
           >
-            <div className="absolute inset-0 bg-white/50 border border-white/60 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-500 group-hover:bg-white/70 group-hover:scale-105" />
-            <span className="relative z-10 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-[#111111]">
+            <div className="absolute inset-0 bg-white/60 border border-white/80 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-500 group-hover:bg-white/90 group-hover:scale-105" />
+            <span className="relative z-10 font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-black">
               CONTACT
             </span>
             {pathname === '/contact' && (
               <motion.div 
                 layoutId="activeDot"
-                className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#111111]"
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-black"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}
