@@ -6,11 +6,11 @@ import { ArrowDownRight } from "lucide-react";
 import Image from "next/image";
 
 const videos = [
-  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785004665/TensorPix_-_Contemporary_house_architectural_202607151334_202607151339-ezremove_o7zkhw.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785004912/TensorPix_-_Video_Project_3-ezremove_mnjmnw.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785005827/TensorPix_-_gemini_generated_video_1552f757-ezremove_rophuf.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785005078/TensorPix_-_Video_Project_8-ezremove_uyq2ym.mp4",
-  "https://res.cloudinary.com/ntliyhwb/video/upload/q_auto,f_auto/v1785006719/TensorPix_-_gemini_generated_video_59f4f080-ezremove_1_qsfhjp.mp4"
+  "/new%20tensopix/video1.mp4",
+  "/new%20tensopix/new_video2.mp4",
+  "/new%20tensopix/new_video3.mp4",
+  "/new%20tensopix/video4.mp4",
+  "/new%20tensopix/video5.mp4"
 ];
 
 const heroTexts = [
@@ -42,13 +42,23 @@ export default function Hero() {
       if (idx === currentVideoIndex) {
         vid.currentTime = 0;
         vid.play().catch(e => console.log("Play error:", e));
-      } else {
-        vid.pause();
       }
     });
+
+    // Wait for the 1000ms CSS fade transition to finish before pausing old videos
+    const timeoutId = setTimeout(() => {
+      videoRefs.current.forEach((vid, idx) => {
+        if (!vid) return;
+        if (idx !== currentVideoIndex) {
+          vid.pause();
+        }
+      });
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [currentVideoIndex]);
 
-  const transitionToVideo = (nextIndex: number) => {
+  const transitionToSlide = (nextIndex: number) => {
     if (nextIndex === currentVideoIndex) return;
     setCurrentVideoIndex(nextIndex);
   };
@@ -129,9 +139,9 @@ export default function Hero() {
           return (
             <button
               key={index}
-              onClick={() => transitionToVideo(index)}
+              onClick={() => transitionToSlide(index)}
               className="group flex flex-col items-start gap-1 cursor-pointer focus:outline-none focus-visible:outline-none bg-transparent border-none p-0 transition-all duration-200 active:scale-95 select-none [-webkit-tap-highlight-color:transparent]"
-              aria-label={`Go to video ${index + 1}`}
+              aria-label={`Go to slide ${index + 1}`}
             >
               {/* Horizontal Bar */}
               <div className={`w-10 sm:w-20 h-[3px] rounded-full transition-colors duration-300 ${
