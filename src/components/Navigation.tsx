@@ -92,7 +92,7 @@ export default function Navigation() {
               alt="PLAN Bë Logo" 
               width={200} 
               height={200} 
-              className="w-28 md:w-44 h-auto object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" 
+              className="w-28 md:w-36 lg:w-44 h-auto object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" 
             />
           </motion.div>
         </Link>
@@ -100,7 +100,7 @@ export default function Navigation() {
         {/* Right: Menu Button (Mobile Only) */}
         <MagneticButton 
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white/50 border border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden hover:bg-white/70 transition-colors duration-300 pointer-events-auto"
         >
           <div className="relative w-4 h-3 flex flex-col justify-between items-center pointer-events-none">
             <motion.span 
@@ -120,7 +120,7 @@ export default function Navigation() {
 
         <motion.div
           style={{ paddingBottom: navPaddingY, paddingTop: navPaddingY, backdropFilter: blurFilter }}
-          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center px-4 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
+          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center px-4 rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 pointer-events-auto"
         >
         {/* Subtle Blueprint Grid Texture */}
         <div 
@@ -131,7 +131,7 @@ export default function Navigation() {
           }}
         />
         {/* Center: Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 relative z-10 ml-2 md:ml-0">
+        <nav className="hidden lg:flex items-center space-x-1 relative z-10 ml-2 lg:ml-0">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
