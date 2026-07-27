@@ -172,10 +172,9 @@ export default function Hero() {
           </h2>
         </div>
 
-        {/* Right Side: Dynamic Text Above CTA Buttons */}
-        <div className="pointer-events-auto flex flex-col justify-end items-start w-full md:w-auto mt-2 md:mt-0">
-          
-          <div className="w-full flex items-end justify-start overflow-hidden mb-3 sm:mb-4">
+        {/* Right Side: Dynamic Text */}
+        <div className="pointer-events-auto flex flex-col justify-end items-start md:items-end w-full md:w-auto mt-2 md:mt-0">
+          <div className="w-full flex items-end justify-start md:justify-end overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.h3
                 key={currentVideoIndex}
@@ -188,15 +187,6 @@ export default function Hero() {
                 {heroTexts[currentVideoIndex]}
               </motion.h3>
             </AnimatePresence>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2.5 sm:gap-4 w-auto">
-            <button className="bg-[#111111] text-[#F7F5F2] font-sans text-[11px] sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3.5 min-h-[38px] sm:min-h-[44px] flex items-center justify-start gap-2 sm:gap-3 hover:bg-black transition-colors duration-300 rounded-full">
-              View Projects <ArrowDownRight size={14} className="-rotate-90" />
-            </button>
-            <button className="bg-white text-[#111111] font-sans text-[11px] sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3.5 min-h-[38px] sm:min-h-[44px] flex items-center justify-start gap-2 sm:gap-3 hover:bg-gray-50 transition-colors duration-300 shadow-sm border border-gray-100 rounded-full">
-              Start Your Project <ArrowDownRight size={14} className="-rotate-90 text-gray-400" />
-            </button>
           </div>
         </div>
       </div>
