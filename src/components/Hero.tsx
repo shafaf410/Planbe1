@@ -204,13 +204,6 @@ export default function Hero() {
               className="group flex flex-col items-start gap-1 cursor-pointer focus:outline-none focus-visible:outline-none bg-transparent border-none p-0 transition-all duration-200 active:scale-95 select-none [-webkit-tap-highlight-color:transparent]"
               aria-label={`Go to video ${index + 1}`}
             >
-              {/* Number Label */}
-              <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
-                isActive ? "text-white font-bold" : "text-white/40 group-hover:text-white/80"
-              }`}>
-                {`0${index + 1}`}
-              </span>
-              
               {/* Horizontal Bar */}
               <div className={`w-10 sm:w-20 h-[3px] rounded-full transition-colors duration-300 ${
                 isActive ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "bg-white/30"
