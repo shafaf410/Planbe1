@@ -105,6 +105,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-transparent mux-player-container">
           <style dangerouslySetInnerHTML={{__html: `
             .mux-player-container mux-player {
+              --controls: none;
               --media-object-fit: cover;
               --media-object-position: center;
               position: absolute;
