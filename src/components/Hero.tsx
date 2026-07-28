@@ -6,11 +6,11 @@ import { ArrowDownRight } from "lucide-react";
 import Image from "next/image";
 
 const videos = [
-  "/new%20tensopix/video1.mp4",
-  "/new%20tensopix/new_video2.mp4",
-  "/new%20tensopix/new_video3.mp4",
-  "/new%20tensopix/video4.mp4",
-  "/new%20tensopix/video5.mp4"
+  "/new_tensopix/video1.mp4",
+  "/new_tensopix/new_video2.mp4",
+  "/new_tensopix/new_video3.mp4",
+  "/new_tensopix/video4.mp4",
+  "/new_tensopix/video5.mp4"
 ];
 
 const heroTexts = [
@@ -23,9 +23,15 @@ const heroTexts = [
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  
+  // State for the ping-pong architecture
+  const [activePlayer, setActivePlayer] = useState<'A' | 'B'>('A');
+  const [indexA, setIndexA] = useState(0);
+  const [indexB, setIndexB] = useState(1);
+  const [logicalIndex, setLogicalIndex] = useState(0); // The actual current video index
 
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const playerARef = useRef<HTMLVideoElement>(null);
+  const playerBRef = useRef<HTMLVideoElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -35,42 +41,62 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Handle playing/pausing when the index changes
+  // Initial play
   useEffect(() => {
-    videoRefs.current.forEach((vid, idx) => {
-      if (!vid) return;
-      if (idx === currentVideoIndex) {
-        vid.currentTime = 0;
-        vid.play().catch(e => console.log("Play error:", e));
-      }
-    });
-
-    // Wait for the 1000ms CSS fade transition to finish before pausing old videos
-    const timeoutId = setTimeout(() => {
-      videoRefs.current.forEach((vid, idx) => {
-        if (!vid) return;
-        if (idx !== currentVideoIndex) {
-          vid.pause();
-        }
-      });
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [currentVideoIndex]);
+    if (playerARef.current) {
+      playerARef.current.play().catch(e => console.log("Init play error:", e));
+    }
+  }, []);
 
   const transitionToSlide = (nextIndex: number) => {
-    if (nextIndex === currentVideoIndex) return;
-    setCurrentVideoIndex(nextIndex);
+    if (nextIndex === logicalIndex) return;
+
+    const nextPlayer = activePlayer === 'A' ? 'B' : 'A';
+    const activeRef = activePlayer === 'A' ? playerARef.current : playerBRef.current;
+
+    // Set the source for the next player to the requested index. 
+    // This triggers a React re-render.
+    if (nextPlayer === 'A') setIndexA(nextIndex);
+    else setIndexB(nextIndex);
+    
+    setLogicalIndex(nextIndex);
+    setActivePlayer(nextPlayer);
+
+    // Delay pausing the old video so the 1-second CSS crossfade completes smoothly
+    setTimeout(() => {
+      if (activeRef) {
+        activeRef.pause();
+        activeRef.currentTime = 0;
+      }
+      
+      // Preload the *following* video in the background player
+      const preloadIndex = (nextIndex + 1) % videos.length;
+      if (nextPlayer === 'A') {
+        setIndexB(preloadIndex);
+      } else {
+        setIndexA(preloadIndex);
+      }
+    }, 1000);
   };
 
+  // Wait until React has actually updated the video src in the DOM, then force it to play.
+  useEffect(() => {
+    const activeRef = activePlayer === 'A' ? playerARef.current : playerBRef.current;
+    if (activeRef) {
+      activeRef.currentTime = 0;
+      activeRef.play().catch(e => console.log("Play error:", e));
+    }
+  }, [activePlayer, logicalIndex]);
+
   const handleVideoEnded = () => {
-    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+    const nextIndex = (logicalIndex + 1) % videos.length;
+    transitionToSlide(nextIndex);
   };
 
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#F7F5F2]"
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#111111]"
     >
       {/* Full-Screen Blurred Video Background */}
       <motion.div 
@@ -78,23 +104,33 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-transparent">
-          {videos.map((src, index) => (
-            <video
-              key={src}
-              ref={(el) => {
-                videoRefs.current[index] = el;
-              }}
-              src={src}
-              muted
-              playsInline
-              disablePictureInPicture
-              preload="auto"
-              onEnded={handleVideoEnded}
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
-                index === currentVideoIndex ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-              }`}
-            />
-          ))}
+          {/* Player A */}
+          <video
+            ref={playerARef}
+            src={videos[indexA]}
+            muted
+            autoPlay
+            playsInline
+            disablePictureInPicture
+            preload="auto"
+            onEnded={activePlayer === 'A' ? handleVideoEnded : undefined}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+              activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
+          />
+          {/* Player B */}
+          <video
+            ref={playerBRef}
+            src={videos[indexB]}
+            muted
+            playsInline
+            disablePictureInPicture
+            preload="auto"
+            onEnded={activePlayer === 'B' ? handleVideoEnded : undefined}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+              activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
+          />
           
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
@@ -116,14 +152,14 @@ export default function Hero() {
           <div className="w-full flex items-end justify-start md:justify-end overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.h3
-                key={currentVideoIndex}
+                key={logicalIndex}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="font-serif text-3xl sm:text-4xl text-white tracking-wide font-light whitespace-nowrap"
               >
-                {heroTexts[currentVideoIndex]}
+                {heroTexts[logicalIndex]}
               </motion.h3>
             </AnimatePresence>
           </div>
@@ -134,8 +170,8 @@ export default function Hero() {
       
       {/* Bottom Center Pagination & Floating Bars */}
       <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4 z-20 pointer-events-auto">
-        {videos.map((_, index) => {
-          const isActive = index === currentVideoIndex;
+        {heroTexts.map((_, index) => {
+          const isActive = index === logicalIndex;
           return (
             <button
               key={index}

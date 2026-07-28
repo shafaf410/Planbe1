@@ -39,7 +39,7 @@ export default function LandingPage() {
     <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#FAFAFA] text-[#111111] overflow-hidden">
       {/* Eagerly preload the first video of the home page so it's ready the instant we redirect */}
       <video 
-        src="/new%20tensopix/video1.mp4" 
+        src="/new_tensopix/video1.mp4" 
         preload="auto" 
         className="hidden" 
         muted 
