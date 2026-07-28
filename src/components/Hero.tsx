@@ -62,10 +62,15 @@ export default function Hero() {
     setLogicalIndex(nextIndex);
     setActivePlayer(nextPlayer);
 
-    // Delay pausing the old video so the 1-second CSS crossfade completes smoothly
+    // PAUSE immediately to save GPU performance (don't play 2 videos at once)
+    // The crossfade will use a frozen frame of the old video, which is much smoother for the laptop.
+    if (activeRef) {
+      activeRef.pause();
+    }
+
+    // After the 1-second CSS crossfade completes, reset the old video and preload the next one
     setTimeout(() => {
       if (activeRef) {
-        activeRef.pause();
         activeRef.currentTime = 0;
       }
       
