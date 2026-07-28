@@ -99,8 +99,7 @@ export default function Hero() {
       className="relative w-full h-[100dvh] overflow-hidden bg-[#111111]"
     >
       {/* Full-Screen Blurred Video Background */}
-      <motion.div 
-        style={{ y, opacity }}
+      <div 
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-transparent mux-player-container">
@@ -120,6 +119,7 @@ export default function Hero() {
             ref={playerARef as any}
             playbackId={videos[indexA]}
             streamType="on-demand"
+            maxResolution="720p"
             muted
             autoPlay={indexA === 0}
             preload="auto"
@@ -133,6 +133,7 @@ export default function Hero() {
             ref={playerBRef as any}
             playbackId={videos[indexB]}
             streamType="on-demand"
+            maxResolution="720p"
             muted
             preload="auto"
             onEnded={activePlayer === 'B' ? handleVideoEnded : undefined}
@@ -144,7 +145,7 @@ export default function Hero() {
           {/* Dark Overlay for Text Readability */}
           <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
         </div>
-      </motion.div>
+      </div>
  
       {/* Main Content Area */}
       <div className="absolute inset-0 w-full z-10 flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 md:pt-0 pb-16 sm:pb-24 md:pb-28 lg:pb-32 pointer-events-none gap-4 md:gap-8">
