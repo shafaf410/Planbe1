@@ -37,15 +37,6 @@ export default function LandingPage() {
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#FAFAFA] text-[#111111] overflow-hidden">
-      {/* Eagerly preload the first video of the home page so it's ready the instant we redirect */}
-      <video 
-        src="/new_tensopix/video1.mp4" 
-        preload="auto" 
-        className="hidden" 
-        muted 
-        playsInline 
-      />
-
       <div className="z-10 flex flex-col items-center justify-center space-y-16">
         {/* Animated Logo */}
         <motion.div

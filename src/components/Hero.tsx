@@ -2,15 +2,14 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowDownRight } from "lucide-react";
-import Image from "next/image";
+import MuxPlayer from "@mux/mux-player-react";
 
 const videos = [
-  "/new_tensopix/video1.mp4",
-  "/new_tensopix/new_video2.mp4",
-  "/new_tensopix/new_video3.mp4",
-  "/new_tensopix/video4.mp4",
-  "/new_tensopix/video5.mp4"
+  "8X0102y00PkGKj7sQDkctWOiDb00PWWeetzD01JQFkuS4ds8", // Slide 1
+  "Y3jwv3W6pJ7dLCK1J00Hlsp3382Pl6NFjME02edf3Yd84", // Slide 2
+  "crlILe01v8dbg017P2xa00802XR8aC8U6cTbadtCRENZmSM", // Slide 3
+  "o678pKt9uQE4rsjXj00N9m01vEpnK3QIc1pDDNvXX240000", // Slide 4
+  "lwFzWGoXtLkUNTcMBT5gK600NY8urdDb02Xh242Rto4So", // Slide 5
 ];
 
 const heroTexts = [
@@ -30,6 +29,7 @@ export default function Hero() {
   const [indexB, setIndexB] = useState(1);
   const [logicalIndex, setLogicalIndex] = useState(0); // The actual current video index
 
+  // MuxPlayer forwards a ref to an HTMLMediaElement-like interface
   const playerARef = useRef<HTMLVideoElement>(null);
   const playerBRef = useRef<HTMLVideoElement>(null);
 
@@ -103,31 +103,40 @@ export default function Hero() {
         style={{ y, opacity }}
         className="absolute inset-0 z-0"
       >
-        <div className="absolute inset-0 bg-transparent">
+        <div className="absolute inset-0 bg-transparent mux-player-container">
+          <style dangerouslySetInnerHTML={{__html: `
+            .mux-player-container mux-player {
+              --media-object-fit: cover;
+              --media-object-position: center;
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+            }
+          `}} />
+          
           {/* Player A */}
-          <video
-            ref={playerARef}
-            src={videos[indexA]}
+          <MuxPlayer
+            ref={playerARef as any}
+            playbackId={videos[indexA]}
+            streamType="on-demand"
             muted
-            autoPlay
-            playsInline
-            disablePictureInPicture
+            autoPlay={indexA === 0}
             preload="auto"
             onEnded={activePlayer === 'A' ? handleVideoEnded : undefined}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+            className={`transition-opacity duration-1000 ${
               activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
             }`}
           />
           {/* Player B */}
-          <video
-            ref={playerBRef}
-            src={videos[indexB]}
+          <MuxPlayer
+            ref={playerBRef as any}
+            playbackId={videos[indexB]}
+            streamType="on-demand"
             muted
-            playsInline
-            disablePictureInPicture
             preload="auto"
             onEnded={activePlayer === 'B' ? handleVideoEnded : undefined}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
+            className={`transition-opacity duration-1000 ${
               activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
             }`}
           />
