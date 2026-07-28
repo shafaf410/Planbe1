@@ -127,7 +127,6 @@ export default function Hero() {
             streamType="on-demand"
             maxResolution="720p"
             muted
-            controls={false}
             autoPlay={indexA === 0}
             preload="auto"
             onEnded={activePlayer === 'A' ? handleVideoEnded : undefined}
@@ -142,7 +141,6 @@ export default function Hero() {
             streamType="on-demand"
             maxResolution="720p"
             muted
-            controls={false}
             preload="auto"
             onEnded={activePlayer === 'B' ? handleVideoEnded : undefined}
             className={`transition-opacity duration-1000 ${
