@@ -2,36 +2,24 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import MuxPlayer from "@mux/mux-player-react";
 
 const videos = [
-  "8X0102y00PkGKj7sQDkctWOiDb00PWWeetzD01JQFkuS4ds8", // Slide 1
-  "Y3jwv3W6pJ7dLCK1J00Hlsp3382Pl6NFjME02edf3Yd84", // Slide 2
-  "crlILe01v8dbg017P2xa00802XR8aC8U6cTbadtCRENZmSM", // Slide 3
-  "o678pKt9uQE4rsjXj00N9m01vEpnK3QIc1pDDNvXX240000", // Slide 4
-  "lwFzWGoXtLkUNTcMBT5gK600NY8urdDb02Xh242Rto4So", // Slide 5
+  { mp4: "/videos/slide1.mp4", webm: "/videos/slide1.webm" },
+  { mp4: "/videos/slide2.mp4", webm: "/videos/slide2.webm" },
+  { mp4: "/videos/slide3.mp4", webm: "/videos/slide3.webm" },
+  { mp4: "/videos/slide4.mp4", webm: "/videos/slide4.webm" },
 ];
 
 const heroTexts = [
   "Be Creative",
   "Be Different",
   "Be Sustainable",
-  "Be Inspired",
-  "Be Bold"
+  "Be Inspired"
 ];
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // State for the ping-pong architecture
-  const [activePlayer, setActivePlayer] = useState<'A' | 'B'>('A');
-  const [indexA, setIndexA] = useState(0);
-  const [indexB, setIndexB] = useState(1);
-  const [logicalIndex, setLogicalIndex] = useState(0); // The actual current video index
-
-  // MuxPlayer forwards a ref to an HTMLMediaElement-like interface
-  const playerARef = useRef<HTMLVideoElement>(null);
-  const playerBRef = useRef<HTMLVideoElement>(null);
+  const [logicalIndex, setLogicalIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -41,61 +29,16 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Initial play
+  // Slideshow auto-rotation timer (resets when logicalIndex changes)
   useEffect(() => {
-    if (playerARef.current) {
-      playerARef.current.play().catch(e => console.log("Init play error:", e));
-    }
-  }, []);
+    const timer = setInterval(() => {
+      setLogicalIndex((prev) => (prev + 1) % videos.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [logicalIndex]);
 
   const transitionToSlide = (nextIndex: number) => {
-    if (nextIndex === logicalIndex) return;
-
-    const nextPlayer = activePlayer === 'A' ? 'B' : 'A';
-    const activeRef = activePlayer === 'A' ? playerARef.current : playerBRef.current;
-
-    // Set the source for the next player to the requested index. 
-    // This triggers a React re-render.
-    if (nextPlayer === 'A') setIndexA(nextIndex);
-    else setIndexB(nextIndex);
-    
     setLogicalIndex(nextIndex);
-    setActivePlayer(nextPlayer);
-
-    // PAUSE immediately to save GPU performance (don't play 2 videos at once)
-    // The crossfade will use a frozen frame of the old video, which is much smoother for the laptop.
-    if (activeRef) {
-      activeRef.pause();
-    }
-
-    // After the 1-second CSS crossfade completes, reset the old video and preload the next one
-    setTimeout(() => {
-      if (activeRef) {
-        activeRef.currentTime = 0;
-      }
-      
-      // Preload the *following* video in the background player
-      const preloadIndex = (nextIndex + 1) % videos.length;
-      if (nextPlayer === 'A') {
-        setIndexB(preloadIndex);
-      } else {
-        setIndexA(preloadIndex);
-      }
-    }, 1000);
-  };
-
-  // Wait until React has actually updated the video src in the DOM, then force it to play.
-  useEffect(() => {
-    const activeRef = activePlayer === 'A' ? playerARef.current : playerBRef.current;
-    if (activeRef) {
-      activeRef.currentTime = 0;
-      activeRef.play().catch(e => console.log("Play error:", e));
-    }
-  }, [activePlayer, logicalIndex]);
-
-  const handleVideoEnded = () => {
-    const nextIndex = (logicalIndex + 1) % videos.length;
-    transitionToSlide(nextIndex);
   };
 
   return (
@@ -103,58 +46,32 @@ export default function Hero() {
       ref={containerRef} 
       className="relative w-full h-[100dvh] overflow-hidden bg-[#111111]"
     >
-      {/* Full-Screen Blurred Video Background */}
-      <div 
-        className="absolute inset-0 z-0"
-      >
-        <div className="absolute inset-0 bg-transparent mux-player-container">
-          <style dangerouslySetInnerHTML={{__html: `
-            .mux-player-container mux-player {
-              --controls: none;
-              --media-object-fit: cover;
-              --media-object-position: center;
-              position: absolute;
-              inset: 0;
-              width: 100%;
-              height: 100%;
-            }
-          `}} />
-          
-          {/* Player A */}
-          <MuxPlayer
-            ref={playerARef as any}
-            playbackId={videos[indexA]}
-            streamType="on-demand"
-            maxResolution="720p"
+      {/* Full-Screen Video Background */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence mode="wait">
+          <motion.video
+            key={logicalIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.0, ease: "easeInOut" }}
             muted
-            autoPlay={indexA === 0}
-            preload="auto"
-            onEnded={activePlayer === 'A' ? handleVideoEnded : undefined}
-            className={`transition-opacity duration-1000 ${
-              activePlayer === 'A' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
-          {/* Player B */}
-          <MuxPlayer
-            ref={playerBRef as any}
-            playbackId={videos[indexB]}
-            streamType="on-demand"
-            maxResolution="720p"
-            muted
-            preload="auto"
-            onEnded={activePlayer === 'B' ? handleVideoEnded : undefined}
-            className={`transition-opacity duration-1000 ${
-              activePlayer === 'B' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-          />
-          
-          {/* Dark Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
-        </div>
+            autoPlay
+            playsInline
+            loop
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={videos[logicalIndex].webm} type="video/webm" />
+            <source src={videos[logicalIndex].mp4} type="video/mp4" />
+          </motion.video>
+        </AnimatePresence>
+        
+        {/* Dark Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
       </div>
  
       {/* Main Content Area */}
-      <div className="absolute inset-0 w-full z-10 flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 md:pt-0 pb-16 sm:pb-24 md:pb-28 lg:pb-32 pointer-events-none gap-4 md:gap-8">
+      <div className="absolute inset-0 w-full z-10 flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 md:pt-0 pb-8 sm:pb-12 md:pb-16 lg:pb-16 pointer-events-none gap-4 md:gap-8">
         
         {/* Left Side: Static Text */}
         <div className="pointer-events-auto flex flex-col items-start text-left w-full md:w-auto">
